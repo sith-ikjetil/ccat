@@ -1,9 +1,24 @@
 program ccat;
 
 uses
-    SysUtils;
+    SysUtils, RegExpr;
+
+type
+    //
+    // TNCLR Type
+    //
+    TColorItem = record
+        m_color: string;    // color
+        m_re: string;       // regular expression
+    end;
 
 var
+    //
+    // <syntax>.nanorc color records
+    //
+    g_colorItems: array [1..1000] of TColorItem;
+    g_ciIndex: integer = 1;
+
     //
     // Colors
     //
@@ -37,9 +52,7 @@ var
     // Misc
     //
     g_input: string;
-    g_path_nanorc_dir: string = '~/.nano/';
-    g_syntax: string = '';
-    g_fnano: text;
+    g_syntax: string;
 
 //
 // RenderHelp
@@ -128,15 +141,91 @@ begin
 end;
 
 //
+// TranslateColorNameToColorValue
+//
+// (i): Translate color name to color value. Default white.
+//
+function TranslateColorNameToColorValue(name: string) : string;
+begin
+    TranslateColorNameToColorValue := g_clr_white;
+
+    if comparetext(name,'white') = 0
+    then TranslateColorNameToColorValue := g_clr_white;
+
+    if comparetext(name,'black') = 0
+    then TranslateColorNameToColorValue := g_clr_black;
+
+    if comparetext(name,'red') = 0
+    then TranslateColorNameToColorValue := g_clr_red;
+
+    if comparetext(name,'blue') = 0
+    then TranslateColorNameToColorValue := g_clr_blue;
+
+    if comparetext(name,'green') = 0
+    then TranslateColorNameToColorValue := g_clr_green;
+
+    if comparetext(name,'yellow') = 0
+    then TranslateColorNameToColorValue := g_clr_yellow;
+
+    if comparetext(name,'magenta') = 0
+    then TranslateColorNameToColorValue := g_clr_magenta;
+
+    if comparetext(name,'cyan') = 0
+    then TranslateColorNameToColorValue := g_clr_cyan;
+
+    if comparetext(name,'brightwhite') = 0
+    then TranslateColorNameToColorValue := g_clr_brightwhite;
+
+    if comparetext(name,'brightblack') = 0
+    then TranslateColorNameToColorValue := g_clr_brightblack;
+
+    if comparetext(name,'brightred') = 0
+    then TranslateColorNameToColorValue := g_clr_brightred;
+
+    if comparetext(name,'brightblue') = 0
+    then TranslateColorNameToColorValue := g_clr_brightblue;
+
+    if comparetext(name,'brightgreen') = 0
+    then TranslateColorNameToColorValue := g_clr_brightgreen;
+
+    if comparetext(name,'brightyellow') = 0
+    then TranslateColorNameToColorValue := g_clr_brightyellow;
+
+    if comparetext(name,'brightmagenta') = 0
+    then TranslateColorNameToColorValue := g_clr_brightmagenta;
+
+    if comparetext(name,'brightcyan') = 0
+    then TranslateColorNameToColorValue := g_clr_brightcyan;
+
+end;
+
+//
 // AddItemToColorArray
 //
 // (i): Adds a colored reg expression to color array.
 //
 procedure AddItemToColorArray(line: string);
+var
+    re: TRegExpr;
+    temp_item: TColorItem;
 begin
+    if g_ciIndex < 1000 then
+    begin
+        temp_item.m_color := '';
+        temp_item.m_re := '';
 
+        re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
+        if re.Exec(line) then
+        begin
+            temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
+            temp_item.m_re := re.Match[3];
+            g_colorItems[g_ciIndex] := temp_item;
+            g_ciIndex += 1;
+            writeln(g_colorItems[g_ciIndex-1].m_color);
+        end;
+        re.Free();
+    end;
 end;
-
 
 //
 // LoadSyntaxNanoRc
@@ -188,6 +277,3 @@ begin
         else RenderRaw();                       // Render raw because we have no syntax
     end;
 end.
-
-
-
