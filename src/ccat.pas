@@ -1,5 +1,7 @@
 program ccat;
 
+{$H+}
+
 uses
     SysUtils, RegExpr;
 
@@ -12,12 +14,21 @@ type
         m_re: string;       // regular expression
     end;
 
+    TLineItem = record
+        m_i: integer;
+        m_len: integer;
+        m_pre: string;
+        m_post: string;
+    end;
 var
     //
     // <syntax>.nanorc color records
     //
     g_colorItems: array [1..1000] of TColorItem;
     g_ciIndex: integer = 1;
+
+    g_lineItems: array [1..1000] of TLineItem;
+    g_liIndex: integer = 1;
 
     //
     // Colors
@@ -86,11 +97,128 @@ begin
     readln(g_input);
     while not eof do 
     begin
-	writeln(g_input);
-	readln(g_input);
+    	writeln(g_input);
+	    readln(g_input);
     end;
     writeln(g_input);
 end;   
+
+//
+// PreRenderInput
+//
+// (i): Sets up line items for rendering of input line
+//
+procedure PreRenderInput(input: string; ci: TColorItem);
+var
+    re: TRegExpr;
+    i: integer;
+    temp: string;
+    right: string;
+    temp_item: TLineItem;
+begin
+    temp := input;
+    re := TRegExpr.Create(ci.m_re);
+    if re.Exec(temp) then
+    begin
+        temp_item.m_i := pos(re.Match[0],temp);
+        temp_item.m_len := length(re.Match[0]);
+        temp_item.m_pre := ci.m_color;
+        temp_item.m_post := g_clr_reset;
+
+        g_lineItems[g_liIndex] := temp_item;
+        g_liIndex += 1;        
+        
+        while re.ExecNext do
+        begin
+            right := rightstr(temp,Length(temp)-temp_item.m_i-length(re.Match[0])+1);
+            
+            i := pos(re.Match[0], right);
+            temp_item.m_i := i + length(input) - length(right);
+            temp_item.m_len := length(re.Match[0]);
+            temp_item.m_pre := ci.m_color;
+            temp_item.m_post := g_clr_reset;
+
+            g_lineItems[g_liIndex] := temp_item;
+            g_liIndex += 1;        
+        end;
+    end;
+    re.Free();
+end;
+
+//
+// IsOkToPostRender
+//
+// (i): Decline items to render in other items already rendered
+//
+function IsOkToPostRender(li: integer; i: integer; len: integer) : boolean;
+var
+    j: integer;
+    max: integer;
+begin
+    IsOkToPostRender := true;
+    max := g_liIndex - 1;
+    for j := 1 to max do
+    begin
+        if (j <> li) then
+        begin
+            if (g_lineItems[j].m_i > i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) < (i+len)) then
+            begin
+                IsOkToPostRender := false;
+                break;
+            end;
+        end;
+    end;
+end;
+
+//
+// PostRenderInput
+//
+// (i): Post renders line input
+//
+function PostRenderInput(input: string) : string;
+var
+    i: integer = 1;
+    j: integer;
+    max: integer;
+    temp: string;
+    left: string;
+    right: string;
+    s: string;
+begin
+    PostRenderInput := input;
+    max := g_liIndex - 1;
+
+    temp := input;
+    for i := 1 to max do
+    begin
+        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len) then
+        begin
+            left := leftstr(temp,g_lineItems[i].m_i-1);
+            right := rightstr(temp,Length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
+
+            s := copy(temp, g_lineItems[i].m_i, g_lineItems[i].m_len);
+
+            temp := left;
+            temp += g_lineItems[i].m_pre;
+            temp += s;
+            temp += g_lineItems[i].m_post;
+            temp += right;
+
+            // Now update array for items further away
+            for j := 1 to max do
+            begin
+                if (g_lineItems[j].m_i > g_lineItems[i].m_i) then
+                begin
+                    g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
+                    g_lineItems[j].m_i += length(g_lineItems[i].m_post);
+                end;
+            end;
+        end;
+    end;        
+
+    PostRenderInput := temp;
+    g_liIndex := 1;
+end;
 
 //
 // RenderColored
@@ -98,8 +226,33 @@ end;
 // (i): Renders input with color output.
 //
 procedure RenderColored();
+var
+    i: integer = 1;
+    max: integer;
+    temp: string;
 begin
-    writeln('RenderColored...');
+    max := g_ciIndex - 1;
+
+    readln(g_input);
+    while not eof do 
+    begin
+        temp := g_input;
+        for i := 1 to max do
+        begin
+            PreRenderInput(temp, g_colorItems[i]);
+        end;
+        temp := PostRenderInput(temp);
+	    writeln(temp);
+        readln(g_input);
+    end;
+
+    temp := g_input;
+    for i := 1 to max do
+    begin
+        PreRenderInput(temp, g_colorItems[i]);
+    end;
+    temp := PostRenderInput(temp);
+	writeln(temp);
 end;
 
 //
@@ -130,7 +283,7 @@ function GetArgIn(arg: string): string;
 var
     i: integer = 1;
 begin
-    GetArgIn := ' ';
+    GetArgIn := '';
 
     for i := 1 to paramcount do
     begin
@@ -199,6 +352,25 @@ begin
 
 end;
 
+function NormalizeRegExPattern(re: string) : string;
+var
+    left: string;
+    right: string;
+    temp: string;
+begin
+    NormalizeRegExPattern := re;
+
+    left := leftstr(re,2);
+    right := rightstr(re,2);
+    if (comparestr(left,'\<') = 0) and (comparestr(right,'\>') = 0) then
+    begin
+        temp := re;
+        delete(temp,1,2);
+        delete(temp,Length(temp)-1,2);
+        NormalizeRegExPattern := temp;
+    end;
+end;
+
 //
 // AddItemToColorArray
 //
@@ -209,19 +381,24 @@ var
     re: TRegExpr;
     temp_item: TColorItem;
 begin
-    if g_ciIndex < 1000 then
+    if line[1] <> '#' then
     begin
-        temp_item.m_color := '';
-        temp_item.m_re := '';
-
-        re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
-        if re.Exec(line) then
+        if g_ciIndex < 1000 then
         begin
-            temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
-            temp_item.m_re := re.Match[3];
-            g_colorItems[g_ciIndex] := temp_item;
-            g_ciIndex += 1;
-            writeln(g_colorItems[g_ciIndex-1].m_color);
+            temp_item.m_color := '';
+            temp_item.m_re := '';
+        
+            re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
+            if re.Exec(line) then
+            begin
+                temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
+                temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
+                if (Length(temp_item.m_color) > 0) and (Length(temp_item.m_re) > 0) then
+                begin
+                    g_colorItems[g_ciIndex] := temp_item;
+                    g_ciIndex += 1;
+                end;
+            end;
         end;
         re.Free();
     end;
@@ -260,7 +437,7 @@ begin
 end;
 
 //
-// main function
+// program block
 //
 begin
     if IsArgIn('--help') then                   // Check for help request
