@@ -1,5 +1,6 @@
 program ccat;
 
+{$MODE OBJFPC}
 {$H+}
 
 uses
@@ -117,32 +118,38 @@ var
     temp_item: TLineItem;
 begin
     temp := input;
-    re := TRegExpr.Create(ci.m_re);
-    if re.Exec(temp) then
-    begin
-        temp_item.m_i := pos(re.Match[0],temp);
-        temp_item.m_len := length(re.Match[0]);
-        temp_item.m_pre := ci.m_color;
-        temp_item.m_post := g_clr_reset;
+    try
+        try
+            re := TRegExpr.Create(ci.m_re);
+            if re.Exec(temp) then
+            begin
+                temp_item.m_i := pos(re.Match[0],temp);
+                temp_item.m_len := length(re.Match[0]);
+                temp_item.m_pre := ci.m_color;
+                temp_item.m_post := g_clr_reset;
 
-        g_lineItems[g_liIndex] := temp_item;
-        g_liIndex += 1;        
+                g_lineItems[g_liIndex] := temp_item;
+                g_liIndex += 1;        
         
-        while re.ExecNext do
-        begin
-            right := rightstr(temp,Length(temp)-temp_item.m_i-length(re.Match[0])+1);
+                while re.ExecNext do
+                begin
+                    right := rightstr(temp,Length(temp)-temp_item.m_i-length(re.Match[0])+1);
             
-            i := pos(re.Match[0], right);
-            temp_item.m_i := i + length(input) - length(right);
-            temp_item.m_len := length(re.Match[0]);
-            temp_item.m_pre := ci.m_color;
-            temp_item.m_post := g_clr_reset;
+                    i := pos(re.Match[0], right);
+                    temp_item.m_i := i + length(input) - length(right);
+                    temp_item.m_len := length(re.Match[0]);
+                    temp_item.m_pre := ci.m_color;
+                    temp_item.m_post := g_clr_reset;
 
-            g_lineItems[g_liIndex] := temp_item;
-            g_liIndex += 1;        
+                    g_lineItems[g_liIndex] := temp_item;
+                    g_liIndex += 1;        
+                end;
+            end;
+        except
         end;
+    finally
+        re.Free();
     end;
-    re.Free();
 end;
 
 //
@@ -157,11 +164,11 @@ var
 begin
     IsOkToPostRender := true;
     max := g_liIndex - 1;
-    for j := 1 to max do
+    for j := li to max do
     begin
         if (j <> li) then
         begin
-            if (g_lineItems[j].m_i > i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) < (i+len)) then
+            if (g_lineItems[j].m_i <= i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) > (i)) then
             begin
                 IsOkToPostRender := false;
                 break;
@@ -195,7 +202,7 @@ begin
         begin
             left := leftstr(temp,g_lineItems[i].m_i-1);
             right := rightstr(temp,Length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
-
+            
             s := copy(temp, g_lineItems[i].m_i, g_lineItems[i].m_len);
 
             temp := left;
@@ -352,6 +359,11 @@ begin
 
 end;
 
+//
+// NormalizeRegExPattern
+//
+// (i): Update pattern to work with this application.
+//
 function NormalizeRegExPattern(re: string) : string;
 var
     left: string;
@@ -381,26 +393,31 @@ var
     re: TRegExpr;
     temp_item: TColorItem;
 begin
-    if line[1] <> '#' then
+    if (length(line) > 1) and (line[1] <> '#') then
     begin
         if g_ciIndex < 1000 then
         begin
             temp_item.m_color := '';
             temp_item.m_re := '';
-        
-            re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
-            if re.Exec(line) then
-            begin
-                temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
-                temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
-                if (Length(temp_item.m_color) > 0) and (Length(temp_item.m_re) > 0) then
-                begin
-                    g_colorItems[g_ciIndex] := temp_item;
-                    g_ciIndex += 1;
+            try
+                try
+                    re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
+                    if re.Exec(line) then
+                    begin
+                        temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
+                        temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
+                        if (Length(temp_item.m_color) > 0) and (Length(temp_item.m_re) > 0) then
+                        begin
+                            g_colorItems[g_ciIndex] := temp_item;
+                            g_ciIndex += 1;
+                        end;
+                    end;
+                except
                 end;
+            finally
+                re.Free();
             end;
         end;
-        re.Free();
     end;
 end;
 
@@ -424,7 +441,7 @@ begin
     
     if fileexists(fname) then
     begin
-        Assign(fnrc, fname);
+        assign(fnrc, fname);
         reset(fnrc);
         
         while not eof(fnrc) do
