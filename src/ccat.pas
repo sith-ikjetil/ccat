@@ -1,3 +1,8 @@
+//#: Title       : ccat.pas
+//#: Date        : 2020-12-25
+//#: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
+//#: Version     : 0.1
+//#: Description : Source code to ccat.
 program ccat;
 
 {$MODE OBJFPC}
