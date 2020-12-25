@@ -150,7 +150,7 @@ begin
         
                 while re.ExecNext do
                 begin
-                    right := rightstr(temp,Length(temp)-temp_item.m_i-length(re.Match[0])+1);
+                    right := rightstr(temp,length(temp)-temp_item.m_i-length(re.Match[0])+1);
             
                     i := pos(re.Match[0], right);
                     temp_item.m_i := i + length(input) - length(right);
@@ -218,7 +218,7 @@ begin
         if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len) then
         begin
             left := leftstr(temp,g_lineItems[i].m_i-1);
-            right := rightstr(temp,Length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
+            right := rightstr(temp,length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
             
             s := copy(temp, g_lineItems[i].m_i, g_lineItems[i].m_len);
 
@@ -312,7 +312,7 @@ begin
     for i := 1 to paramcount do
     begin
         if pos(arg,paramstr(i)) > 0 then
-            GetArgIn := rightstr(paramstr(i),Length(paramstr(i))-Length(arg)-1);
+            GetArgIn := rightstr(paramstr(i),length(paramstr(i))-length(arg)-1);
             break;
     end;    
 end;
@@ -395,7 +395,7 @@ begin
     begin
         temp := re;
         delete(temp,1,2);
-        delete(temp,Length(temp)-1,2);
+        delete(temp,length(temp)-1,2);
         NormalizeRegExPattern := temp;
     end;
 end;
@@ -423,7 +423,7 @@ begin
                     begin
                         temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
                         temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
-                        if (Length(temp_item.m_color) > 0) and (Length(temp_item.m_re) > 0) then
+                        if (length(temp_item.m_color) > 0) and (length(temp_item.m_re) > 0) then
                         begin
                             g_colorItems[g_ciIndex] := temp_item;
                             g_ciIndex += 1;
