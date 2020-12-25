@@ -8,13 +8,16 @@ uses
 
 type
     //
-    // TNCLR Type
+    // A reg expr. and its color.
     //
     TColorItem = record
         m_color: string;    // color
         m_re: string;       // regular expression
     end;
 
+    //
+    // A line item
+    //
     TLineItem = record
         m_i: integer;
         m_len: integer;
@@ -23,11 +26,19 @@ type
     end;
 var
     //
+    // Version string
+    //
+    g_version: string = '0.1';
+
+    //
     // <syntax>.nanorc color records
     //
     g_colorItems: array [1..1000] of TColorItem;
     g_ciIndex: integer = 1;
 
+    //
+    // line items for each g_input (each line of input)
+    //
     g_lineItems: array [1..1000] of TLineItem;
     g_liIndex: integer = 1;
 
@@ -74,17 +85,18 @@ var
 procedure RenderHelp();
 begin
     writeln('Usage: ccat [option]');
-    writeln();
-    writeln('With no FILE, then read from standard input');
+    writeln('Version: ',g_version);
+    writeln('Reads from standard input');
     writeln('<syntax> is a <syntax>.nanorc file from ~/.nano/<syntax>.nanorc');
     writeln();
     writeln('  --help               display this help screen and exit');
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
     writeln();
     writeln('Examples:');
-    writeln('  ccat --syntax=pascal < f        Outputs stdin using pascal syntax');
-    writeln('  cat f | ccat --syntax=pascal    Outputs stdin using pascal syntax');
+    writeln('  ccat --syntax=pascal < f        Takes f as stdin and outputs using pascal syntax');
+    writeln('  cat f | ccat --syntax=pascal    Takes f as stdin and outputs using pascal syntax');
     writeln();
+    writeln('Created by Kjetil Kristoffer Solberg <post@ikjetil.no>');
     writeln();
 end;
 
@@ -457,7 +469,7 @@ end;
 // program block
 //
 begin
-    if IsArgIn('--help') then                   // Check for help request
+    if (paramcount = 0) or IsArgIn('--help') then                   // Check for help request
         RenderHelp()
     else
     begin
