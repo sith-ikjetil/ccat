@@ -17,7 +17,7 @@ where
 # etc..
 ```
 The quality of the coloring of syntax varies depending on how good the quality of the nanorc.  
-Not all nanorc syntax is supported. As of now only: 'color <color-name> "regular expression"' is supported.  
+Not all nanorc syntax is supported. As of now only: 'color color-name "regular expression"' is supported.  
 
 The ccat color rendering engine differs from nanos so output might be different on same nanorc.  
 
