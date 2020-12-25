@@ -2,6 +2,7 @@
 License: **GPL-3.0-or-later**  
 Colorized Linux cat command.  
 This is work in progress.  
+Compiles with free pascal compiler.  
 Works with pascal.nanorc found here: [https://www.github.com/sith-ikjetil/pascal.nanorc]  
 
 Usage:  
