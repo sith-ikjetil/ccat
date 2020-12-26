@@ -386,8 +386,10 @@ var
     left: string;
     right: string;
     temp: string;
+    retval: string;
 begin
-    NormalizeRegExPattern := re;
+    retval := re;
+    NormalizeRegExPattern := retval;
 
     left := leftstr(re,2);
     right := rightstr(re,2);
@@ -396,8 +398,15 @@ begin
         temp := re;
         delete(temp,1,2);
         delete(temp,length(temp)-1,2);
-        NormalizeRegExPattern := temp;
+        retval := temp;
     end;
+    
+    if length(retval) > 1 then
+        if retval[1] = '(' then
+            if retval[2] <> '\b' then 
+                retval := concat('\b', retval, '\b');
+   
+    NormalizeRegExPattern := retval;
 end;
 
 //
