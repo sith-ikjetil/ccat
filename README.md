@@ -1,6 +1,6 @@
 # ccat
 License: **GPL-3.0-or-later**  
-Colorized Linux cat command.  
+Color Linux cat type command.  
 Uses nanorc files for coloring information.  
 This is work in progress.  
 Compiles with free pascal compiler.  
