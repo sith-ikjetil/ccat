@@ -555,6 +555,150 @@ begin
 end;
 
 //
+// GuessSyntax
+//
+// (i): Guess syntax from filename
+//
+function GuessSyntax(fname: string) : string;
+var
+    re: TRegExpr;
+    ext: string;
+begin
+try
+    try
+        re := TRegExpr.Create('\.[A-Za-z]+$');
+        if re.Exec(fname) then
+        begin
+            ext := LowerCase(re.Match[0]);
+            
+            if comparestr(ext,'.pas') = 0
+            then GuessSyntax := 'pascal';
+            
+            if comparestr(ext,'.ino') = 0
+            then GuessSyntax := 'arduino';
+
+            if comparestr(ext,'.asm') = 0
+            then GuessSyntax := 'asm';
+
+            if comparestr(ext,'.awk') = 0
+            then GuessSyntax := 'awk';
+
+            if comparestr(ext,'.bat') = 0
+            then GuessSyntax := 'batch';
+
+            if comparestr(ext,'.cmd') = 0
+            then GuessSyntax := 'batch';
+
+            if comparestr(ext,'.c') = 0
+            then GuessSyntax := 'c';
+
+            if comparestr(ext,'.cpp') = 0
+            then GuessSyntax := 'c';
+
+            if comparestr(ext,'.h') = 0
+            then GuessSyntax := 'c';
+
+            if comparestr(ext,'.hpp') = 0
+            then GuessSyntax := 'c';
+
+            if comparestr(ext,'.cmake') = 0
+            then GuessSyntax := 'cmake';
+
+            if comparestr(ext,'.coffee') = 0
+            then GuessSyntax := 'coffescript';
+
+            if comparestr(ext,'.cs') = 0
+            then GuessSyntax := 'csharp';
+
+            if comparestr(ext,'.css') = 0
+            then GuessSyntax := 'css';
+
+            if comparestr(ext,'.csv') = 0
+            then GuessSyntax := 'csv';
+
+            if comparestr(ext,'.f') = 0
+            then GuessSyntax := 'fortran';
+
+            if comparestr(ext,'.f90') = 0
+            then GuessSyntax := 'fortran';
+
+            if comparestr(ext,'.ff95') = 0
+            then GuessSyntax := 'fortran';
+
+            if comparestr(ext,'.go') = 0
+            then GuessSyntax := 'go';
+
+            if comparestr(ext,'.hs') = 0
+            then GuessSyntax := 'haskell';
+            
+            if comparestr(ext,'.java') = 0
+            then GuessSyntax := 'java';
+            
+            if comparestr(ext,'.js') = 0
+            then GuessSyntax := 'js';
+            
+            if comparestr(ext,'.json') = 0
+            then GuessSyntax := 'json';
+            
+            if comparestr(ext,'.kt') = 0
+            then GuessSyntax := 'kotlin';
+            
+            if comparestr(ext,'.kts') = 0
+            then GuessSyntax := 'kotlin';
+            
+            if comparestr(ext,'.el') = 0
+            then GuessSyntax := 'lisp';
+            
+            if comparestr(ext,'.lisp') = 0
+            then GuessSyntax := 'lisp';
+            
+            if comparestr(ext,'.scm') = 0
+            then GuessSyntax := 'lisp';
+            
+            if comparestr(ext,'.ss') = 0
+            then GuessSyntax := 'lisp';
+            
+            if comparestr(ext,'.pl') = 0
+            then GuessSyntax := 'perl';
+
+            if comparestr(ext,'.pm') = 0
+            then GuessSyntax := 'perl';
+
+            if comparestr(ext,'.py') = 0
+            then GuessSyntax := 'python';
+
+            if comparestr(ext,'.rb') = 0
+            then GuessSyntax := 'ruby';
+
+            if comparestr(ext,'.rs') = 0
+            then GuessSyntax := 'rust';
+
+            if comparestr(ext,'.sql') = 0
+            then GuessSyntax := 'sql';
+
+            if comparestr(ext,'.swift') = 0
+            then GuessSyntax := 'swift';
+
+            if comparestr(ext,'.xml') = 0
+            then GuessSyntax := 'xml';
+
+            if comparestr(ext,'.repo') = 0
+            then GuessSyntax := 'yum';
+
+            if comparestr(ext,'.yml') = 0
+            then GuessSyntax := 'yaml';
+
+            if comparestr(ext,'.yaml') = 0
+            then GuessSyntax := 'yaml';
+        end;
+    except
+    end;
+    finally
+        re.Free();
+    end;
+end;
+
+//
 // program block
 //
 begin
@@ -574,7 +718,14 @@ begin
     else if (paramcount = 1) and not IsArgIn('--syntax') then
     begin
         g_filename := GetArgFileName();
-        RenderRaw();// TODO: IMPL FILENAME AUTO SYNTAX
+        g_syntax := GuessSyntax(g_filename);
+        if length(g_syntax) > 0 then 
+        begin
+            if LoadSyntaxNanoRc()
+            then RenderColored()
+            else RenderRaw();
+        end
+        else RenderRaw();
     end
     else if (paramcount = 2) and IsArgIn('--syntax') then       // If an argument but not --help or --syntax then assume f name
     begin
