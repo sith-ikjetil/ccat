@@ -29,12 +29,14 @@ type
         m_pre: string;
         m_post: string;
     end;
-var
+
+const
     //
     // Version string
     //
-    g_version: string = '0.1';
+    g_version = '0.1';
 
+var
     //
     // <syntax>.nanorc color records
     //
@@ -79,8 +81,8 @@ var
     //
     // Misc
     //
-    g_input: string;
     g_syntax: string;
+    g_filename: string = '';
 
 //
 // RenderHelp
@@ -98,8 +100,9 @@ begin
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
     writeln();
     writeln('Examples:');
-    writeln('  ccat --syntax=pascal < f        Takes f as stdin and outputs using pascal syntax');
-    writeln('  cat f | ccat --syntax=pascal    Takes f as stdin and outputs using pascal syntax');
+    writeln('  ccat --syntax=pascal f          Takes f and outputs using pascal syntax');
+    writeln('  ccat --syntax=pascal < f        Takes f and outputs using pascal syntax');
+    writeln('  cat f | ccat --syntax=pascal    Takes f and outputs using pascal syntax');
     writeln();
     writeln('Created by Kjetil Kristoffer Solberg <post@ikjetil.no>');
     writeln();
@@ -111,14 +114,33 @@ end;
 // (i): Renders input raw.
 //
 procedure RenderRaw();
+var
+    input: string;
+    f: textfile;
 begin
-    readln(g_input);
-    while not eof do 
+    if length(g_filename) > 0 then
+    begin 
+        assignfile(f, g_filename);
+        reset(f);
+
+        readln(f,input);
+        while not eof(f) do 
+        begin
+    	    writeln(input);
+	        readln(f,input);
+        end;
+        writeln(input);
+    end
+    else
     begin
-    	writeln(g_input);
-	    readln(g_input);
+        readln(input);
+        while not eof do 
+        begin
+    	    writeln(input);
+	        readln(input);
+        end;
+        writeln(input);
     end;
-    writeln(g_input);
 end;   
 
 //
@@ -251,32 +273,63 @@ end;
 //
 procedure RenderColored();
 var
+    input: string;
     i: integer = 1;
     max: integer;
     temp: string;
+    f: text;
 begin
     max := g_ciIndex - 1;
 
-    readln(g_input);
-    while not eof do 
-    begin
-        temp := g_input;
+    if length(g_filename) > 0 then
+    begin 
+        assignfile(f, g_filename);
+        reset(f);
+    
+        readln(f,input);
+        while not eof(f) do 
+        begin
+            temp := input;
+            for i := 1 to max do
+            begin
+                PreRenderInput(temp, g_colorItems[i]);
+            end;
+            temp := PostRenderInput(temp);
+	        writeln(temp);
+            readln(f,input);
+        end;
+
+        temp := input;
         for i := 1 to max do
         begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
         temp := PostRenderInput(temp);
 	    writeln(temp);
-        readln(g_input);
-    end;
-
-    temp := g_input;
-    for i := 1 to max do
+    end
+    else
     begin
-        PreRenderInput(temp, g_colorItems[i]);
+        readln(input);
+        while not eof do 
+        begin
+            temp := input;
+            for i := 1 to max do
+            begin
+                PreRenderInput(temp, g_colorItems[i]);
+            end;
+            temp := PostRenderInput(temp);
+	        writeln(temp);
+            readln(input);
+        end;
+
+        temp := input;
+        for i := 1 to max do
+        begin
+            PreRenderInput(temp, g_colorItems[i]);
+        end;
+        temp := PostRenderInput(temp);
+	    writeln(temp);
     end;
-    temp := PostRenderInput(temp);
-	writeln(temp);
 end;
 
 //
@@ -480,20 +533,60 @@ begin
 end;
 
 //
+// GetArgFileName
+//
+// (i): First argument not known is estimated to be filename
+//
+function GetArgFileName() : string;
+var
+    i: integer;
+begin
+    GetArgFileName := '';
+
+    for i := 1 to paramcount do
+    begin
+        if (pos('--syntax', paramstr(i)) = 0) and (pos('--help', paramstr(i)) = 0) then
+        begin        
+            if fileexists(paramstr(i)) 
+            then GetArgFileName := paramstr(i);
+            break;
+        end;
+    end;
+end;
+
+//
 // program block
 //
 begin
-    if (paramcount = 0) or IsArgIn('--help') then                   // Check for help request
+    if (paramcount = 0) then                   // Check for help request
         RenderHelp()
-    else
+    else if (paramcount = 1) and IsArgIn('--help') then
     begin
-        if IsArgIn('--syntax') then             // Do we have syntax?
+        RenderHelp();
+    end
+    else if (paramcount = 1) and IsArgIn('--syntax') then
+    begin
+        g_syntax := GetArgIn('--syntax');       // Get syntax
+        if LoadSyntaxNanoRc()                   // Load <syntax>.nanorc and check if ok
+        then RenderColored()                    // Render colored all looks good
+        else RenderRaw();
+    end
+    else if (paramcount = 1) and not IsArgIn('--syntax') then
+    begin
+        g_filename := GetArgFileName();
+        RenderRaw();// TODO: IMPL FILENAME AUTO SYNTAX
+    end
+    else if (paramcount = 2) and IsArgIn('--syntax') then       // If an argument but not --help or --syntax then assume f name
+    begin
+        g_syntax := GetArgIn('--syntax');       // Get syntax
+        g_filename := GetArgFileName();
+        if length(g_filename) = 0 
+        then RenderRaw()
+        else
         begin
-            g_syntax := GetArgIn('--syntax');   // Get syntax
-            if LoadSyntaxNanoRc()               // Load <syntax>.nanorc and check if ok
-            then RenderColored()                // Render colored all looks good
-            else RenderRaw();                   // Render raw because load <syntax>.nanorc failed
+            if LoadSyntaxNanoRc()                // Load <syntax>.nanorc and check if ok
+            then RenderColored()                 // Render colored all looks good
+            else RenderRaw();
         end
-        else RenderRaw();                       // Render raw because we have no syntax
-    end;
+    end
 end.

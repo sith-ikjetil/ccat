@@ -4,9 +4,13 @@
 .hy
 .SH NAME
 .PP
-ccat \- coloring stdin to stdout using nanorc coloring
+ccat \- coloring stdin or file to stdout using nanorc coloring
 .SH SYNOPSIS
 .PP
+\f[B]ccat\f[R] [\f[I]OPTION\f[R]] [\f[I]FILE\f[R]]
+.PD 0
+.P
+.PD
 \f[B]ccat\f[R] [\f[I]OPTION\f[R]] < [\f[I]FILE\f[R]]
 .PD 0
 .P
@@ -14,29 +18,26 @@ ccat \- coloring stdin to stdout using nanorc coloring
 \f[B]\&...\f[R] | \f[B]ccat\f[R] [\f[I]OPTION\f[R]]
 .SH DESCRIPTION
 .PP
-Coloring stdin to stdout for content that has a .nanorc coloring syntax
-file.
-.PD 0
-.P
-.PD
-Files are expected to be under \[ti]/.nano/(syntax).nanorc
+Coloring stdin or [\f[I]FILE\f[R]] using \[ti]/.nano/(syntax).nanorc
+syntax file
 .SH OPTIONS
 .TP
 .B \f[B]\[em]\-help\f[R]
 Shows the default help screen
 .TP
 .B \f[B]\[em]\-syntax=\f[R]\f[I](syntax)\f[R]
-Renders stdin to stdout coloring stdin to stdout using nanorc color
-scheme from \[ti]/.nano/.nanorc
+Renders stdin or [\f[I]FILE\f[R]] to stdout coloring using
+\[ti]/.nano/(syntax).nanorc file
 .SH EXAMPLES
 .TP
-.B \f[B]ccat \[em]\-syntax=pascal\f[R] < f
-Coloring file f to stdout using pascal syntax
-(\[ti]/.nano/pascal.nanorc)
+.B \f[B]ccat \[em]\-syntax=pascal\f[R] f
+Coloring file f using pascal syntax (\[ti]/.nano/pascal.nanorc)
 .TP
-.B \f[B]cat\f[R] \f[B]f\f[R] | \f[B]ccat\f[R] \f[I]\[em]\-syntax=pascal\f[R]
-Coloring file f to stdout using pascal syntax
-(\[ti]/.nano/pascal.nanorc)
+.B \f[B]ccat \[em]\-syntax=pascal\f[R] < f
+Coloring file f using pascal syntax (\[ti]/.nano/pascal.nanorc)
+.TP
+.B cat f | \f[B]ccat \[em]\-syntax=pascal\f[R]
+Coloring file f using pascal syntax (\[ti]/.nano/pascal.nanorc)
 .SH BUGS
 .PP
 All software have bugs :)

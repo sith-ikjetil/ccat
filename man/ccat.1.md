@@ -3,29 +3,32 @@
 % December 2020
 
 # NAME
-ccat - coloring stdin to stdout using nanorc coloring
+ccat - coloring stdin or file to stdout using nanorc coloring
 
 # SYNOPSIS
+**ccat** [*OPTION*] [*FILE*]  
 **ccat** [*OPTION*] < [*FILE*]  
 **...** | **ccat** [*OPTION*]
 
 # DESCRIPTION
-Coloring stdin to stdout for content that has a .nanorc coloring syntax file.  
-Files are expected to be under ~/.nano/(syntax).nanorc
+Coloring stdin or [*FILE*] using ~/.nano/(syntax).nanorc syntax file
 
 # OPTIONS
 **----help**  
 : Shows the default help screen
 
 **----syntax=***(syntax)*  
-: Renders stdin to stdout coloring stdin to stdout using nanorc color scheme from ~/.nano/<syntax>.nanorc
+: Renders stdin or [*FILE*] to stdout coloring using ~/.nano/(syntax).nanorc file
 
 # EXAMPLES
-**ccat ----syntax=pascal** < f  
-: Coloring file f to stdout using pascal syntax (~/.nano/pascal.nanorc)
+**ccat ----syntax=pascal** f  
+: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
 
-**cat** **f** | **ccat** *----syntax=pascal*  
-: Coloring file f to stdout using pascal syntax (~/.nano/pascal.nanorc)
+**ccat ----syntax=pascal** < f  
+: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
+
+cat f | **ccat ----syntax=pascal**  
+: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
 
 # BUGS
 All software have bugs :)
