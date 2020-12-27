@@ -2,15 +2,20 @@
 License: **GPL-3.0-or-later**  
 Color Linux cat type command.  
 Uses nanorc files for coloring information.  
+Expects nanorc files to be found under ~/.nano  
 This is work in progress.  
 Compiles with free pascal compiler.  
-Works also with pascal.nanorc found here: [https://www.github.com/sith-ikjetil/pascal.nanorc]  
+Works good with pascal.nanorc found here: [https://www.github.com/sith-ikjetil/pascal.nanorc]  
 
 Usage:  
 ```
- cat test.pas | ccat --syntax=pascal
+ cat test.pas
+or
+ ccat --syntax=pascal test.pas
 or
  ccat --syntax=pascal < test.pas
+or
+ cat test.pas | ccat --syntax=pascal
 where
  # --syntax=pascal means it looks in ~/.nano/pascal.nanorc for nanorc syntax format
  # --syntax=perl means it looks in ~/.nano/perl.nanorc for nanorc syntax format
