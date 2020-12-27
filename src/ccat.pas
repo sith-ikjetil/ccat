@@ -379,56 +379,25 @@ function TranslateColorNameToColorValue(name: string) : string;
 begin
     TranslateColorNameToColorValue := g_clr_white;
 
-    if comparetext(name,'white') = 0
-    then TranslateColorNameToColorValue := g_clr_white;
-
-    if comparetext(name,'black') = 0
-    then TranslateColorNameToColorValue := g_clr_black;
-
-    if comparetext(name,'red') = 0
-    then TranslateColorNameToColorValue := g_clr_red;
-
-    if comparetext(name,'blue') = 0
-    then TranslateColorNameToColorValue := g_clr_blue;
-
-    if comparetext(name,'green') = 0
-    then TranslateColorNameToColorValue := g_clr_green;
-
-    if comparetext(name,'yellow') = 0
-    then TranslateColorNameToColorValue := g_clr_yellow;
-
-    if comparetext(name,'magenta') = 0
-    then TranslateColorNameToColorValue := g_clr_magenta;
-
-    if comparetext(name,'cyan') = 0
-    then TranslateColorNameToColorValue := g_clr_cyan;
-
-    if comparetext(name,'brightwhite') = 0
-    then TranslateColorNameToColorValue := g_clr_brightwhite;
-
-    if comparetext(name,'brightblack') = 0
-    then TranslateColorNameToColorValue := g_clr_brightblack;
-
-    if comparetext(name,'brightred') = 0
-    then TranslateColorNameToColorValue := g_clr_brightred;
-
-    if comparetext(name,'brightblue') = 0
-    then TranslateColorNameToColorValue := g_clr_brightblue;
-
-    if comparetext(name,'brightgreen') = 0
-    then TranslateColorNameToColorValue := g_clr_brightgreen;
-
-    if comparetext(name,'brightyellow') = 0
-    then TranslateColorNameToColorValue := g_clr_brightyellow;
-
-    if comparetext(name,'brightmagenta') = 0
-    then TranslateColorNameToColorValue := g_clr_brightmagenta;
-
-    if comparetext(name,'brightcyan') = 0
-    then TranslateColorNameToColorValue := g_clr_brightcyan;
-
+    case name of
+        'white': TranslateColorNameToColorValue := g_clr_white;
+        'black': TranslateColorNameToColorValue := g_clr_black;
+        'red': TranslateColorNameToColorValue := g_clr_red;
+        'blue': TranslateColorNameToColorValue := g_clr_blue;
+        'green': TranslateColorNameToColorValue := g_clr_green;
+        'yellow': TranslateColorNameToColorValue := g_clr_yellow;
+        'magenta': TranslateColorNameToColorValue := g_clr_magenta;
+        'cyan': TranslateColorNameToColorValue := g_clr_cyan;
+        'brightwhite': TranslateColorNameToColorValue := g_clr_brightwhite;
+        'brightblack': TranslateColorNameToColorValue := g_clr_brightblack;
+        'brightred': TranslateColorNameToColorValue := g_clr_brightred;
+        'brightblue': TranslateColorNameToColorValue := g_clr_brightblue;
+        'brightgreen': TranslateColorNameToColorValue := g_clr_brightgreen;
+        'brightyellow': TranslateColorNameToColorValue := g_clr_brightyellow;
+        'brightmagenta': TranslateColorNameToColorValue := g_clr_brightmagenta;
+        'brightcyan': TranslateColorNameToColorValue := g_clr_brightcyan;
+    end;
 end;
-
 //
 // NormalizeRegExPattern
 //
@@ -471,6 +440,7 @@ procedure AddItemToColorArray(line: string);
 var
     re: TRegExpr;
     temp_item: TColorItem;
+    temp: string;
 begin
     if (length(line) > 1) and (line[1] <> '#') then
     begin
@@ -480,11 +450,15 @@ begin
             temp_item.m_re := '';
             try
                 try
-                    re := TRegExpr.Create('(icolor|color)\s(.*)\s"(.*)"');
+                    re := TRegExpr.Create('(icolor|color)[ ]+(.*)[ ]+"(.*)"');
                     if re.Exec(line) then
                     begin
-                        temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
+                        temp := re.Match[2];
+                        temp := trim(temp);
+
+                        temp_item.m_color := TranslateColorNameToColorValue(temp);
                         temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
+
                         if (length(temp_item.m_color) > 0) and (length(temp_item.m_re) > 0) then
                         begin
                             g_colorItems[g_ciIndex] := temp_item;
@@ -571,125 +545,48 @@ try
         begin
             ext := LowerCase(re.Match[0]);
             
-            if comparestr(ext,'.pas') = 0
-            then GuessSyntax := 'pascal';
-            
-            if comparestr(ext,'.ino') = 0
-            then GuessSyntax := 'arduino';
-
-            if comparestr(ext,'.asm') = 0
-            then GuessSyntax := 'asm';
-
-            if comparestr(ext,'.awk') = 0
-            then GuessSyntax := 'awk';
-
-            if comparestr(ext,'.bat') = 0
-            then GuessSyntax := 'batch';
-
-            if comparestr(ext,'.cmd') = 0
-            then GuessSyntax := 'batch';
-
-            if comparestr(ext,'.c') = 0
-            then GuessSyntax := 'c';
-
-            if comparestr(ext,'.cpp') = 0
-            then GuessSyntax := 'c';
-
-            if comparestr(ext,'.h') = 0
-            then GuessSyntax := 'c';
-
-            if comparestr(ext,'.hpp') = 0
-            then GuessSyntax := 'c';
-
-            if comparestr(ext,'.cmake') = 0
-            then GuessSyntax := 'cmake';
-
-            if comparestr(ext,'.coffee') = 0
-            then GuessSyntax := 'coffescript';
-
-            if comparestr(ext,'.cs') = 0
-            then GuessSyntax := 'csharp';
-
-            if comparestr(ext,'.css') = 0
-            then GuessSyntax := 'css';
-
-            if comparestr(ext,'.csv') = 0
-            then GuessSyntax := 'csv';
-
-            if comparestr(ext,'.f') = 0
-            then GuessSyntax := 'fortran';
-
-            if comparestr(ext,'.f90') = 0
-            then GuessSyntax := 'fortran';
-
-            if comparestr(ext,'.ff95') = 0
-            then GuessSyntax := 'fortran';
-
-            if comparestr(ext,'.go') = 0
-            then GuessSyntax := 'go';
-
-            if comparestr(ext,'.hs') = 0
-            then GuessSyntax := 'haskell';
-            
-            if comparestr(ext,'.java') = 0
-            then GuessSyntax := 'java';
-            
-            if comparestr(ext,'.js') = 0
-            then GuessSyntax := 'js';
-            
-            if comparestr(ext,'.json') = 0
-            then GuessSyntax := 'json';
-            
-            if comparestr(ext,'.kt') = 0
-            then GuessSyntax := 'kotlin';
-            
-            if comparestr(ext,'.kts') = 0
-            then GuessSyntax := 'kotlin';
-            
-            if comparestr(ext,'.el') = 0
-            then GuessSyntax := 'lisp';
-            
-            if comparestr(ext,'.lisp') = 0
-            then GuessSyntax := 'lisp';
-            
-            if comparestr(ext,'.scm') = 0
-            then GuessSyntax := 'lisp';
-            
-            if comparestr(ext,'.ss') = 0
-            then GuessSyntax := 'lisp';
-            
-            if comparestr(ext,'.pl') = 0
-            then GuessSyntax := 'perl';
-
-            if comparestr(ext,'.pm') = 0
-            then GuessSyntax := 'perl';
-
-            if comparestr(ext,'.py') = 0
-            then GuessSyntax := 'python';
-
-            if comparestr(ext,'.rb') = 0
-            then GuessSyntax := 'ruby';
-
-            if comparestr(ext,'.rs') = 0
-            then GuessSyntax := 'rust';
-
-            if comparestr(ext,'.sql') = 0
-            then GuessSyntax := 'sql';
-
-            if comparestr(ext,'.swift') = 0
-            then GuessSyntax := 'swift';
-
-            if comparestr(ext,'.xml') = 0
-            then GuessSyntax := 'xml';
-
-            if comparestr(ext,'.repo') = 0
-            then GuessSyntax := 'yum';
-
-            if comparestr(ext,'.yml') = 0
-            then GuessSyntax := 'yaml';
-
-            if comparestr(ext,'.yaml') = 0
-            then GuessSyntax := 'yaml';
+            case ext of
+                '.pas': GuessSyntax := 'pascal';
+                '.ino': GuessSyntax := 'arduino';
+                '.asm': GuessSyntax := 'asm';
+                '.awk': GuessSyntax := 'awk';
+                '.bat': GuessSyntax := 'batch';
+                '.cmd': GuessSyntax := 'batch';
+                '.c': GuessSyntax := 'c';
+                '.cpp': GuessSyntax := 'c';
+                '.h': GuessSyntax := 'c';
+                '.hpp': GuessSyntax := 'c';
+                '.cmake': GuessSyntax := 'cmake';
+                '.coffee': GuessSyntax := 'coffescript';
+                '.cs': GuessSyntax := 'csharp';
+                '.css': GuessSyntax := 'css';
+                '.csv': GuessSyntax := 'csv';
+                '.f': GuessSyntax := 'fortran';
+                '.f90': GuessSyntax := 'fortran';
+                '.ff95': GuessSyntax := 'fortran';
+                '.go': GuessSyntax := 'go';
+                '.hs': GuessSyntax := 'haskell';
+                '.java': GuessSyntax := 'java';
+                '.js': GuessSyntax := 'js';
+                '.json': GuessSyntax := 'json';
+                '.kt': GuessSyntax := 'kotlin';
+                '.kts': GuessSyntax := 'kotlin';
+                '.el': GuessSyntax := 'lisp';
+                '.lisp': GuessSyntax := 'lisp';
+                '.scm': GuessSyntax := 'lisp';
+                '.ss': GuessSyntax := 'lisp';
+                '.pl': GuessSyntax := 'perl';
+                '.pm': GuessSyntax := 'perl';
+                '.py': GuessSyntax := 'python';
+                '.rb': GuessSyntax := 'ruby';
+                '.rs': GuessSyntax := 'rust';
+                '.sql': GuessSyntax := 'sql';
+                '.swift': GuessSyntax := 'swift';
+                '.xml': GuessSyntax := 'xml';
+                '.repo': GuessSyntax := 'yum';
+                '.yml': GuessSyntax := 'yaml';
+                '.yaml': GuessSyntax := 'yaml';
+            end;
         end;
     except
     end;
