@@ -480,7 +480,7 @@ begin
             temp_item.m_re := '';
             try
                 try
-                    re := TRegExpr.Create('(color)\s(.*)\s"(.*)"');
+                    re := TRegExpr.Create('(icolor|color)\s(.*)\s"(.*)"');
                     if re.Exec(line) then
                     begin
                         temp_item.m_color := TranslateColorNameToColorValue(re.Match[2]);
