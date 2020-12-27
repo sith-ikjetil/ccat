@@ -24,7 +24,7 @@ where
  # if no nanorc file is found it renders input to output raw with no coloring or manipulation
 ```
 The quality of the coloring of syntax varies depending on how good the quality of the nanorc.  
-Not all nanorc syntax is supported. As of now only: 'color color-name "regular expression"' is supported.  
+Not all nanorc syntax is supported. As of now only: 'color fg-color-name "regular expression"' is supported.  
 
 The ccat color rendering engine differs from nanos so output might be different on same nanorc.  
 
