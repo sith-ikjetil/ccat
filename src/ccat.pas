@@ -129,6 +129,9 @@ begin
     	    writeln(input);
 	        readln(f,input);
         end;
+
+        close(f);
+
         writeln(input);
     end
     else
@@ -295,9 +298,11 @@ begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
             temp := PostRenderInput(temp);
-	        writeln(temp);
+            writeln(temp);
             readln(f,input);
         end;
+
+        close(f);
 
         temp := input;
         for i := 1 to max do
@@ -305,7 +310,7 @@ begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
         temp := PostRenderInput(temp);
-	    writeln(temp);
+        writeln(temp);
     end
     else
     begin
@@ -318,7 +323,7 @@ begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
             temp := PostRenderInput(temp);
-	        writeln(temp);
+            writeln(temp);
             readln(input);
         end;
 
@@ -328,7 +333,7 @@ begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
         temp := PostRenderInput(temp);
-	    writeln(temp);
+        writeln(temp);
     end;
 end;
 
@@ -502,6 +507,9 @@ begin
             readln(fnrc, line);
             AddItemToColorArray(line);
         end;
+       
+        close(fnrc);
+        
         LoadSyntaxNanoRc := true;
     end
 end;
