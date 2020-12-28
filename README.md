@@ -1,7 +1,7 @@
 # ccat
 License: **GPL-3.0-or-later**  
 Color Linux cat type command.  
-Uses nanorc files for coloring information.  
+Uses rc/nanorc files for coloring information.  
 Expects 1) rc files to be found under ~/.ccat
 Expects - if not found under 1) - 2) nanorc files to be found under ~/.nano  
 This is work in progress.  
