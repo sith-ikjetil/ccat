@@ -100,6 +100,7 @@ begin
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
     writeln();
     writeln('Examples:');
+    writeln('  ccat f                          Takes f and guess what syntax should be');
     writeln('  ccat --syntax=pascal f          Takes f and outputs using pascal syntax');
     writeln('  ccat --syntax=pascal < f        Takes f and outputs using pascal syntax');
     writeln('  cat f | ccat --syntax=pascal    Takes f and outputs using pascal syntax');
@@ -482,7 +483,8 @@ end;
 //
 // LoadSyntaxNanoRc
 //
-// (i): Loads syntax information from ~/.nano/<syntax>.nanorc
+// (i): Loads syntax information from 1) ~/.ccat/<syntax>.rc, then 
+//      if not found 2) ~/.nano/<syntax>.nanorc
 //
 function LoadSyntaxNanoRc() : boolean;
 var
@@ -492,26 +494,49 @@ var
 begin
     LoadSyntaxNanoRc := false;
 
+    // First check ~/.ccat/<g_syntax>.rc
     fname := getuserdir();
-    fname += '.nano/';
+    fname += '.ccat/';
     fname += g_syntax;
-    fname += '.nanorc';
-    
+    fname += '.rc';
     if fileexists(fname) then
     begin
         assign(fnrc, fname);
         reset(fnrc);
-        
+
         while not eof(fnrc) do
         begin
             readln(fnrc, line);
             AddItemToColorArray(line);
         end;
-       
+
         close(fnrc);
-        
+
         LoadSyntaxNanoRc := true;
-    end
+    end    
+    else // else check ~/.nano/<g_syntax>.nanorc
+    begin
+        fname := getuserdir();
+        fname += '.nano/';
+        fname += g_syntax;
+        fname += '.nanorc';
+    
+        if fileexists(fname) then
+        begin
+            assign(fnrc, fname);
+            reset(fnrc);
+        
+            while not eof(fnrc) do
+            begin
+                readln(fnrc, line);
+                AddItemToColorArray(line);
+            end;
+       
+            close(fnrc);
+        
+            LoadSyntaxNanoRc := true;
+        end
+    end;
 end;
 
 //
