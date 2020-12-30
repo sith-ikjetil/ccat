@@ -1,8 +1,8 @@
-//#: Title       : ccat.pas
-//#: Date        : 2020-12-25
-//#: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
-//#: Version     : 0.1
-//#: Description : Source code to ccat.
+//#: Title        : ccat.pas
+//#: Date Created : 2020-12-25
+//#: Author       : Kjetil Kristoffer Solberg <post@ikjetil.no>
+//#: Version      : 0.2
+//#: Description  : Source code to ccat.
 program ccat;
 
 {$MODE OBJFPC}
@@ -24,26 +24,26 @@ type
     // A line item
     //
     TLineItem = record
-        m_i: integer;
-        m_len: integer;
-        m_pre: string;
-        m_post: string;
+        m_i: integer;   // index of item
+        m_len: integer; // length of item
+        m_pre: string;  // pre color string
+        m_post: string; // post color string
     end;
 const
     //
     // Version string
     //
-    g_version = '0.1';
+    g_version = '0.2';
 
 var
     //
-    // <syntax>.nanorc color records
+    // <syntax>.rc/<syntax>.nanorc color records
     //
     g_colorItems: array [1..1000] of TColorItem;
     g_ciIndex: integer = 1;
 
     //
-    // line items for each g_input (each line of input)
+    // line items for each input (each line of input)
     //
     g_lineItems: array [1..1000] of TLineItem;
     g_liIndex: integer = 1;
@@ -93,7 +93,7 @@ begin
     writeln('Usage: ccat [option]');
     writeln('Version: ', g_version);
     writeln('Reads from standard input');
-    writeln('<syntax> is a <syntax>.nanorc file from ~/.nano/<syntax>.nanorc');
+    writeln('<syntax> is a <syntax>.rc/<syntax>.nanorc file from ~/.ccat or ~/.nano');
     writeln();
     writeln('  --help               display this help screen and exit');
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
@@ -127,7 +127,7 @@ begin
         while not eof(f) do 
         begin
     	    writeln(input);
-	        readln(f,input);
+            readln(f,input);
         end;
 
         close(f);
@@ -140,7 +140,7 @@ begin
         while not eof do 
         begin
     	    writeln(input);
-	        readln(input);
+            readln(input);
         end;
         writeln(input);
     end;
@@ -197,14 +197,12 @@ end;
 //
 // (i): Decline items to render in other items already rendered
 //
-function IsOkToPostRender(li: integer; i: integer; len: integer; lineLength: integer) : boolean;
+function IsOkToPostRender(li: integer; i: integer; len: integer) : boolean;
 var
     j: integer;
-    max: integer;
 begin
     IsOkToPostRender := true;
     
-    max := g_liIndex - 1;
     for j := 1 to li do
     begin
         if (j <> li) then
@@ -265,7 +263,7 @@ begin
 
     for i := 1 to max do
     begin
-        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len, length(temp)) then
+        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len) then
         begin
             left := leftstr(temp,g_lineItems[i].m_i-1);
             right := rightstr(temp,length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
@@ -437,6 +435,7 @@ begin
         'brightcyan': TranslateColorNameToColorValue := g_clr_brightcyan;
     end;
 end;
+
 //
 // NormalizeRegExPattern
 //
@@ -665,42 +664,42 @@ end;
 // program block
 //
 begin
-    if (paramcount = 0) then                   // Check for help request
+    if (paramcount = 0) then                   // No arguments show help screen
         RenderHelp()
-    else if (paramcount = 1) and IsArgIn('--help') then
+    else if (paramcount = 1) and IsArgIn('--help') then         // One argument and is --help so show help screen
     begin
         RenderHelp();
     end
-    else if (paramcount = 1) and IsArgIn('--syntax') then
+    else if (paramcount = 1) and IsArgIn('--syntax') then       // One argument is syntax and assume input from stdin
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        if LoadSyntaxNanoRc()                   // Load <syntax>.nanorc and check if ok
+        if LoadSyntaxNanoRc()                   // Load <syntax>.rc/<syntax>.nanorc and check if ok
         then RenderColored()                    // Render colored all looks good
-        else RenderRaw();
+        else RenderRaw();                       // Render raw
     end
-    else if (paramcount = 1) and not IsArgIn('--syntax') then
+    else if (paramcount = 1) and not IsArgIn('--syntax') then   // One argument no syntax so assume filename
     begin
-        g_filename := GetArgFileName();
-        g_syntax := GuessSyntax(g_filename);
+        g_filename := GetArgFileName();         // Get FileName argument
+        g_syntax := GuessSyntax(g_filename);    // Guess syntax
         if length(g_syntax) > 0 then 
         begin
-            if LoadSyntaxNanoRc()
-            then RenderColored()
-            else RenderRaw();
+            if LoadSyntaxNanoRc()               // Load <syntax>.rc/<syntax>.nanorc and check if ok
+            then RenderColored()                // Render colored all looks good
+            else RenderRaw();                   // Render raw
         end
-        else RenderRaw();
+        else RenderRaw();                       // Render raw
     end
-    else if (paramcount = 2) and IsArgIn('--syntax') then       // If an argument but not --help or --syntax then assume f name
+    else if (paramcount = 2) and IsArgIn('--syntax') then       // Two arguments and assume filename and given syntax
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        g_filename := GetArgFileName();
+        g_filename := GetArgFileName();         // Get FileName argument
         if length(g_filename) = 0 
-        then RenderRaw()
+        then RenderRaw()                        // Render raw
         else
         begin
-            if LoadSyntaxNanoRc()                // Load <syntax>.nanorc and check if ok
-            then RenderColored()                 // Render colored all looks good
-            else RenderRaw();
+            if LoadSyntaxNanoRc()               // Load <syntax>.rc/<syntax>.nanorc and check if ok
+            then RenderColored()                // Render colored all looks good
+            else RenderRaw();                   // Render raw
         end
     end
 end.
