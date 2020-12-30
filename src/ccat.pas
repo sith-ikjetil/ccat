@@ -13,7 +13,7 @@ uses
 
 type
     //
-    // A reg expr. and its color.
+    // A syntax file's reg expr. and its color item
     //
     TColorItem = record
         m_color: string;    // color
@@ -21,7 +21,7 @@ type
     end;
 
     //
-    // A line item
+    // A input line item
     //
     TLineItem = record
         m_i: integer;   // index of item
@@ -29,24 +29,12 @@ type
         m_pre: string;  // pre color string
         m_post: string; // post color string
     end;
+
 const
     //
     // Version string
     //
     g_version = '0.2';
-
-var
-    //
-    // <syntax>.rc/<syntax>.nanorc color records
-    //
-    g_colorItems: array [1..1000] of TColorItem;
-    g_ciIndex: integer = 1;
-
-    //
-    // line items for each input (each line of input)
-    //
-    g_lineItems: array [1..1000] of TLineItem;
-    g_liIndex: integer = 1;
 
     //
     // Colors
@@ -77,11 +65,24 @@ var
     g_clr_brightmagenta: string = ''#00#27'[35;1m';
     g_clr_brightcyan: string = ''#00#27'[36;1m';
 
+var
+    //
+    // <syntax>.rc/<syntax>.nanorc color records
+    //
+    g_colorItems: array [1..1000] of TColorItem;
+    g_ciIndex: integer = 1;
+
+    //
+    // line items for each input (each line of input)
+    //
+    g_lineItems: array [1..1000] of TLineItem;
+    g_liIndex: integer = 1;
+
     //
     // Misc
     //
-    g_syntax: string;
-    g_filename: string = '';
+    g_syntax: string;           // given or guessed syntax
+    g_filename: string = '';    // filename if file argument
     
 //
 // RenderHelp
