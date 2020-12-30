@@ -29,7 +29,6 @@ type
         m_pre: string;
         m_post: string;
     end;
-
 const
     //
     // Version string
@@ -83,7 +82,7 @@ var
     //
     g_syntax: string;
     g_filename: string = '';
-
+    
 //
 // RenderHelp
 //
@@ -92,7 +91,7 @@ var
 procedure RenderHelp();
 begin
     writeln('Usage: ccat [option]');
-    writeln('Version: ',g_version);
+    writeln('Version: ', g_version);
     writeln('Reads from standard input');
     writeln('<syntax> is a <syntax>.nanorc file from ~/.nano/<syntax>.nanorc');
     writeln();
@@ -173,17 +172,15 @@ begin
 
                 g_lineItems[g_liIndex] := temp_item;
                 g_liIndex += 1;        
-        
+
                 while re.ExecNext do
                 begin
-                    right := rightstr(temp,length(temp)-temp_item.m_i-length(re.Match[0])+1);
-            
+                    right := rightstr(temp,length(temp)-temp_item.m_i-temp_item.m_len+1);
                     i := pos(re.Match[0], right);
                     temp_item.m_i := i + length(input) - length(right);
                     temp_item.m_len := length(re.Match[0]);
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
-
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;        
                 end;
@@ -200,23 +197,49 @@ end;
 //
 // (i): Decline items to render in other items already rendered
 //
-function IsOkToPostRender(li: integer; i: integer; len: integer) : boolean;
+function IsOkToPostRender(li: integer; i: integer; len: integer; lineLength: integer) : boolean;
 var
     j: integer;
     max: integer;
 begin
     IsOkToPostRender := true;
+    
     max := g_liIndex - 1;
-    for j := li to max do
+    for j := 1 to li do
     begin
         if (j <> li) then
         begin
-            if (g_lineItems[j].m_i <= i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) > (i)) then
+            if ((i > (g_lineItems[j].m_i)) and (i < (g_lineItems[j].m_i+g_lineItems[j].m_len+length(g_lineItems[j].m_post))))
+                or ((i < (g_lineItems[j].m_i)) and ((i+len) > (g_lineItems[j].m_i))) then
             begin
                 IsOkToPostRender := false;
-                break;
-            end;
+                exit;
+            end
         end;
+    end;
+end;
+
+//
+// SortLineItemsByIndex
+//
+// (i): Sorts the g_lineItems array by m_i
+//
+procedure SortLineItemsByIndex(var items: array of TLineItem; size: integer);
+var
+    i: integer;
+    j: integer;
+    index: TLineItem;
+begin
+    for i := 1 to size-1 do
+    begin
+        index := items[i];
+        j := i;
+        while ((j > 0) and (items[j-1].m_i > index.m_i)) do
+        begin
+            items[j] := items[j-1];
+            j := j - 1;
+        end;
+        items[j] := index;
     end;
 end;
 
@@ -239,9 +262,10 @@ begin
     max := g_liIndex - 1;
 
     temp := input;
+
     for i := 1 to max do
     begin
-        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len) then
+        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len, length(temp)) then
         begin
             left := leftstr(temp,g_lineItems[i].m_i-1);
             right := rightstr(temp,length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
@@ -257,7 +281,11 @@ begin
             // Now update array for items further away
             for j := 1 to max do
             begin
-                if (g_lineItems[j].m_i > g_lineItems[i].m_i) then
+                if (g_lineItems[j].m_i > g_lineItems[i].m_i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) <= (g_lineItems[i].m_i+g_lineItems[i].m_len)) then
+                begin
+                    g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
+                end
+                else if ( g_lineItems[j].m_i > g_lineItems[i].m_i ) then
                 begin
                     g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
                     g_lineItems[j].m_i += length(g_lineItems[i].m_post);
@@ -291,6 +319,7 @@ begin
         reset(f);
     
         readln(f,input);
+        
         while not eof(f) do 
         begin
             temp := input;
@@ -298,7 +327,8 @@ begin
             begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
-            temp := PostRenderInput(temp);
+            SortLineItemsByIndex(g_lineItems,g_liIndex-1);
+            temp := PostRenderInput(temp);    
             writeln(temp);
             readln(f,input);
         end;
@@ -310,6 +340,7 @@ begin
         begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
+        SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
         writeln(temp);
     end
@@ -323,6 +354,7 @@ begin
             begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
+            SortLineItemsByIndex(g_lineItems,g_liIndex-1);
             temp := PostRenderInput(temp);
             writeln(temp);
             readln(input);
@@ -333,6 +365,7 @@ begin
         begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
+        SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
         writeln(temp);
     end;
