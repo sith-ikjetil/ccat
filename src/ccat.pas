@@ -531,7 +531,7 @@ begin
     fname := getuserdir();
     fname += '.ccat/';
     fname += g_syntax;
-    fname += '.rc';
+    fname += '.ccrc';
     if fileexists(fname) then
     begin
         assign(fnrc, fname);
