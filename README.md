@@ -38,3 +38,9 @@ Not all nanorc syntax is supported. As of now only the following syntax is suppo
  color fg-color-name "regular expression"
 ```
 
+In order to get coloring in nano when editing the ccrc files you need to copy  
+the ccrc.nanorc file under nanorc to ~/.nano. Then run the following command:
+```
+ echo include \"~/.nano/ccrc.nanorc\" >> ~/.nanorc
+```
+
