@@ -384,8 +384,10 @@ begin
     for i := 1 to paramcount do
     begin
         if pos(arg,paramstr(i)) > 0 then
+        begin
             IsArgIn := true;
             break;
+        end;
     end;
 end;
 
@@ -403,8 +405,10 @@ begin
     for i := 1 to paramcount do
     begin
         if pos(arg,paramstr(i)) > 0 then
+        begin
             GetArgIn := rightstr(paramstr(i),length(paramstr(i))-length(arg)-1);
             break;
+        end;
     end;    
 end;
 
@@ -587,9 +591,11 @@ begin
     begin
         if (pos('--syntax', paramstr(i)) = 0) and (pos('--help', paramstr(i)) = 0) then
         begin        
-            if fileexists(paramstr(i)) 
-            then GetArgFileName := paramstr(i);
-            break;
+            if fileexists(paramstr(i)) then 
+            begin
+                GetArgFileName := paramstr(i);
+                break;
+            end;
         end;
     end;
 end;
