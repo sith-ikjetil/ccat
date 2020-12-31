@@ -612,7 +612,7 @@ var
 begin
 try
     try
-        re := TRegExpr.Create('\.[A-Za-z]+$');
+        re := TRegExpr.Create('\.[A-Za-z_]+$');
         if re.Exec(fname) then
         begin
             ext := LowerCase(re.Match[0]);
@@ -654,10 +654,14 @@ try
                 '.rs': GuessSyntax := 'rust';
                 '.sql': GuessSyntax := 'sql';
                 '.swift': GuessSyntax := 'swift';
+                '.txt': GuessSyntax := 'text';
+                '.text': GuessSyntax := 'text';
                 '.xml': GuessSyntax := 'xml';
                 '.repo': GuessSyntax := 'yum';
                 '.yml': GuessSyntax := 'yaml';
                 '.yaml': GuessSyntax := 'yaml';
+            else
+                GuessSyntax := 'text';
             end;
         end;
     except

@@ -1,0 +1,6 @@
+#text files
+color green "^[#]+.*$"
+color brightyellow "[A-Za-z_\-:,;]+"
+color brightcyan "[0-9]+"
+color yellow "[$]{1}[A-Za-z0-9]+"
+color brightmagenta "\"[^"]*\""
