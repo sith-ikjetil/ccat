@@ -94,7 +94,7 @@ begin
     writeln('Usage: ccat [option]');
     writeln('Version: ', g_version);
     writeln('Reads from standard input');
-    writeln('<syntax> is a <syntax>.rc/<syntax>.nanorc file from ~/.ccat or ~/.nano');
+    writeln('<syntax> is a <syntax>.ccrc/<syntax>.nanorc file from ~/.ccat or ~/.nano');
     writeln();
     writeln('  --help               display this help screen and exit');
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
