@@ -208,8 +208,8 @@ begin
     begin
         if (j <> li) then
         begin
-            if ((i > (g_lineItems[j].m_i)) and (i < (g_lineItems[j].m_i+g_lineItems[j].m_len+length(g_lineItems[j].m_post))))
-                or ((i < (g_lineItems[j].m_i)) and ((i+len) > (g_lineItems[j].m_i))) then
+            if ((i >= g_lineItems[j].m_i) and (i <= (g_lineItems[j].m_i+g_lineItems[j].m_len+length(g_lineItems[j].m_post))))
+                or ((i <= g_lineItems[j].m_i) and ((i+len) >= g_lineItems[j].m_i)) then
             begin
                 IsOkToPostRender := false;
                 exit;
