@@ -591,11 +591,8 @@ begin
     begin
         if (pos('--syntax', paramstr(i)) = 0) and (pos('--help', paramstr(i)) = 0) then
         begin        
-            if fileexists(paramstr(i)) then 
-            begin
-                GetArgFileName := paramstr(i);
-                break;
-            end;
+            GetArgFileName := paramstr(i);
+            break;
         end;
     end;
 end;
@@ -610,62 +607,64 @@ var
     re: TRegExpr;
     ext: string;
 begin
-try
+    GuessSyntax := 'text';
+
     try
-        re := TRegExpr.Create('\.[A-Za-z_]+$');
-        if re.Exec(fname) then
-        begin
-            ext := LowerCase(re.Match[0]);
-            
-            case ext of
-                '.pas': GuessSyntax := 'pascal';
-                '.ino': GuessSyntax := 'arduino';
-                '.asm': GuessSyntax := 'asm';
-                '.awk': GuessSyntax := 'awk';
-                '.bat': GuessSyntax := 'batch';
-                '.cmd': GuessSyntax := 'batch';
-                '.c': GuessSyntax := 'c';
-                '.cpp': GuessSyntax := 'c';
-                '.h': GuessSyntax := 'c';
-                '.hpp': GuessSyntax := 'c';
-                '.cmake': GuessSyntax := 'cmake';
-                '.coffee': GuessSyntax := 'coffescript';
-                '.cs': GuessSyntax := 'csharp';
-                '.css': GuessSyntax := 'css';
-                '.csv': GuessSyntax := 'csv';
-                '.f': GuessSyntax := 'fortran';
-                '.f90': GuessSyntax := 'fortran';
-                '.ff95': GuessSyntax := 'fortran';
-                '.go': GuessSyntax := 'go';
-                '.hs': GuessSyntax := 'haskell';
-                '.java': GuessSyntax := 'java';
-                '.js': GuessSyntax := 'js';
-                '.json': GuessSyntax := 'json';
-                '.kt': GuessSyntax := 'kotlin';
-                '.kts': GuessSyntax := 'kotlin';
-                '.el': GuessSyntax := 'lisp';
-                '.lisp': GuessSyntax := 'lisp';
-                '.scm': GuessSyntax := 'lisp';
-                '.ss': GuessSyntax := 'lisp';
-                '.pl': GuessSyntax := 'perl';
-                '.pm': GuessSyntax := 'perl';
-                '.py': GuessSyntax := 'python';
-                '.rb': GuessSyntax := 'ruby';
-                '.rs': GuessSyntax := 'rust';
-                '.sql': GuessSyntax := 'sql';
-                '.swift': GuessSyntax := 'swift';
-                '.txt': GuessSyntax := 'text';
-                '.text': GuessSyntax := 'text';
-                '.xml': GuessSyntax := 'xml';
-                '.repo': GuessSyntax := 'yum';
-                '.yml': GuessSyntax := 'yaml';
-                '.yaml': GuessSyntax := 'yaml';
-            else
-                GuessSyntax := 'text';
+        try
+            re := TRegExpr.Create('\.[A-Za-z_]+$');
+            if re.Exec(fname) then
+            begin
+                ext := LowerCase(re.Match[0]);
+                
+                case ext of
+                    '.pas': GuessSyntax := 'pascal';
+                    '.ino': GuessSyntax := 'arduino';
+                    '.asm': GuessSyntax := 'asm';
+                    '.awk': GuessSyntax := 'awk';
+                    '.bat': GuessSyntax := 'batch';
+                    '.cmd': GuessSyntax := 'batch';
+                    '.c': GuessSyntax := 'c';
+                    '.cpp': GuessSyntax := 'c';
+                    '.h': GuessSyntax := 'c';
+                    '.hpp': GuessSyntax := 'c';
+                    '.cmake': GuessSyntax := 'cmake';
+                    '.coffee': GuessSyntax := 'coffescript';
+                    '.cs': GuessSyntax := 'csharp';
+                    '.css': GuessSyntax := 'css';
+                    '.csv': GuessSyntax := 'csv';
+                    '.f': GuessSyntax := 'fortran';
+                    '.f90': GuessSyntax := 'fortran';
+                    '.ff95': GuessSyntax := 'fortran';
+                    '.go': GuessSyntax := 'go';
+                    '.hs': GuessSyntax := 'haskell';
+                    '.java': GuessSyntax := 'java';
+                    '.js': GuessSyntax := 'js';
+                    '.json': GuessSyntax := 'json';
+                    '.kt': GuessSyntax := 'kotlin';
+                    '.kts': GuessSyntax := 'kotlin';
+                    '.el': GuessSyntax := 'lisp';
+                    '.lisp': GuessSyntax := 'lisp';
+                    '.scm': GuessSyntax := 'lisp';
+                    '.ss': GuessSyntax := 'lisp';
+                    '.pl': GuessSyntax := 'perl';
+                    '.pm': GuessSyntax := 'perl';
+                    '.py': GuessSyntax := 'python';
+                    '.rb': GuessSyntax := 'ruby';
+                    '.rs': GuessSyntax := 'rust';
+                    '.sql': GuessSyntax := 'sql';
+                    '.swift': GuessSyntax := 'swift';
+                    '.txt': GuessSyntax := 'text';
+                    '.text': GuessSyntax := 'text';
+                    '.xml': GuessSyntax := 'xml';
+                    '.repo': GuessSyntax := 'yum';
+                    '.yml': GuessSyntax := 'yaml';
+                    '.yaml': GuessSyntax := 'yaml';
+                else
+                    GuessSyntax := 'text';
+                end;
             end;
+        except
         end;
-    except
-    end;
     finally
         re.Free();
     end;
@@ -691,6 +690,13 @@ begin
     else if (paramcount = 1) and not IsArgIn('--syntax') then   // One argument no syntax so assume filename
     begin
         g_filename := GetArgFileName();         // Get FileName argument
+        if (length(g_filename) = 0)               // FileName is given but does not exist 
+           or not fileexists(g_filename) then
+        begin
+            writeln('ccat: ', g_filename, ' No such file');
+            exit;
+        end;
+
         g_syntax := GuessSyntax(g_filename);    // Guess syntax
         if length(g_syntax) > 0 then 
         begin
@@ -703,14 +709,18 @@ begin
     else if (paramcount = 2) and IsArgIn('--syntax') then       // Two arguments and assume filename and given syntax
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        g_filename := GetArgFileName();         // Get FileName argument
-        if length(g_filename) = 0 
-        then RenderRaw()                        // Render raw
+        g_filename := GetArgFileName();  // Get FileName argument
+        if (length(g_filename) = 0)               // FileName is given but does not exist
+           or not fileexists(g_filename) then  
+        begin
+            writeln('ccat: ', g_filename, ' No such file');
+            exit;
+        end
         else
         begin
             if LoadSyntaxNanoRc()               // Load <syntax>.rc/<syntax>.nanorc and check if ok
             then RenderColored()                // Render colored all looks good
             else RenderRaw();                   // Render raw
-        end
+        end;
     end
 end.
