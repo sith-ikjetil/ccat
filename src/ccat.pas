@@ -709,8 +709,8 @@ begin
     else if (paramcount = 2) and IsArgIn('--syntax') then       // Two arguments and assume filename and given syntax
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        g_filename := GetArgFileName();  // Get FileName argument
-        if (length(g_filename) = 0)               // FileName is given but does not exist
+        g_filename := GetArgFileName();         // Get FileName argument
+        if (length(g_filename) = 0)             // FileName is given but does not exist
            or not fileexists(g_filename) then  
         begin
             writeln('ccat: ', g_filename, ' No such file');
