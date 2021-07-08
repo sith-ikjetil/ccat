@@ -182,8 +182,9 @@ begin
                     temp_item.m_len := length(re.Match[0]);
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
+
                     g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;        
+                    g_liIndex += 1;  
                 end;
             end;
         except
@@ -209,7 +210,7 @@ begin
         if (j <> li) then
         begin
             if ((i >= g_lineItems[j].m_i) and (i <= (g_lineItems[j].m_i+g_lineItems[j].m_len+length(g_lineItems[j].m_post))))
-                or ((i <= g_lineItems[j].m_i) and ((i+len) >= g_lineItems[j].m_i)) then
+                or ((i <= g_lineItems[j].m_i) and ((i+len) >= (g_lineItems[j].m_i))) then
             begin
                 IsOkToPostRender := false;
                 exit;
@@ -280,7 +281,8 @@ begin
             // Now update array for items further away
             for j := 1 to max do
             begin
-                if (g_lineItems[j].m_i > g_lineItems[i].m_i) and ((g_lineItems[j].m_i + g_lineItems[j].m_len) <= (g_lineItems[i].m_i+g_lineItems[i].m_len)) then
+                if (g_lineItems[j].m_i > g_lineItems[i].m_i) 
+                    and ((g_lineItems[j].m_i + g_lineItems[j].m_len) <= (g_lineItems[i].m_i+g_lineItems[i].m_len)) then
                 begin
                     g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
                 end
@@ -551,8 +553,9 @@ begin
 
         LoadSyntaxNanoRc := true;
     end    
-    else // else check ~/.nano/<g_syntax>.nanorc
+    else
     begin
+        // else check ~/.nano/<g_syntax>.nanorc
         fname := getuserdir();
         fname += '.nano/';
         fname += g_syntax;
@@ -659,6 +662,7 @@ begin
                     '.repo': GuessSyntax := 'yum';
                     '.yml': GuessSyntax := 'yaml';
                     '.yaml': GuessSyntax := 'yaml';
+                    '.sh': GuessSyntax := 'sh';
                 else
                     GuessSyntax := 'text';
                 end;
