@@ -1,0 +1,11 @@
+# .json files
+color brightblue   "\<[-]?[1-9][0-9]*([Ee][+-]?[0-9]+)?\>" 
+color brightblue   "\<[-]?[0](\.[0-9]+)?\>"
+color cyan  "\<null\>"
+color brightcyan "\<(true|false)\>"
+color brightgreen ""(\\.|[^"])*"|'(\\.|[^'])*'"
+color brightgreen "\"(\\"|[^"])*\"[[:space:]]*:" 
+color brightgreen "'(\'|[^'])*'[[:space:]]*:"
+color yellow   "\\u[0-9a-fA-F]{4}|\\[bfnrt'"/\\]"
+color green "[[:space:]]+$"
+color red "	+ +| +	+"
