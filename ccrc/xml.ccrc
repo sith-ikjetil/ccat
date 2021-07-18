@@ -1,10 +1,14 @@
-## Here is an example for xml files.
-syntax "XML" ".*\.([jrs]?html?|xml|sgml?|rng|vue|mei|musicxml)$"
-
-color cyan           "<"
-color cyan           ">"
+# .xml files
+#color cyan           "<"
+#color cyan           ">"
 color brightred      "[ ]{1}[\w]+="
 color green          "\"[^\"]*\""
 color brightmagenta  "&\w+;"
-color yellow start="<!DOCTYPE" end="[/]?>"
-color yellow start="<!--" end="-->"
+#color yellow start="<!DOCTYPE" end="[/]?>"
+#color yellow start="<!--" end="-->"
+color yellow "<\w+/>"
+color yellow "<\w+[ ]+"
+color yellow "</\w+>"
+color yellow "<\w+>"
+color yellow "<\?\w+[ ]+"
+color cyan "<\?[0-9A-Za-z ]+\?>"
