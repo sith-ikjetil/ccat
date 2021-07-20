@@ -5,8 +5,8 @@ Color Linux cat type command.
 
 Uses ccrc/nanorc files for coloring information.  
 
-Expects 1) ccrc files to be found under ~/.ccat  
-Expects - if not found under 1) - 2) nanorc files to be found under ~/.nano  
+Expects 1) ccrc files to be found under ~/.ccat/  
+Expects - if not found under 1) - 2) nanorc files to be found under ~/.nano/  
 
 **Compiles with free pascal compiler.**  
 
@@ -14,28 +14,26 @@ Check out officially supported ccrc files under ccrc directory here: [https://gi
 
 Usage:  
 ```
- cat test.pas
-or
- ccat --syntax=pascal test.pas
+ ccat test.pas
 or
  ccat --syntax=pascal < test.pas
 or
  cat test.pas | ccat --syntax=pascal
 where
- # --syntax=pascal means it looks in ~/.nano/pascal.nanorc for nanorc syntax format
- # --syntax=perl means it looks in ~/.nano/perl.nanorc for nanorc syntax format
- # --syntax=c means it looks in ~/.nano/c.nanorc for nanorc syntax format 
+ # --syntax=pascal means it looks in ~/.ccat/pascal.ccrc then ~/.nano/pascal.nanorc for syntax format
+ # --syntax=perl means it looks in ~/.ccat/perl.ccrc then ~/.nano/perl.nanorc for syntax format
+ # --syntax=c means it looks in ~/.ccat/c.ccrc then ~/.nano/c.nanorc for syntax format 
  # etc..
  # if syntax is specified and no ccrc/nanorc file is found it renders input to 
  #  output raw with no coloring or manipulation
- # if syntax is not specified and a file is given as argument then default it will 
- #  use the text syntax if a guess is not found.
+ # if syntax is not specified and a file given is of unknown type then default it will 
+ #  use the text syntax.
 ```
 The quality of the coloring of syntax varies depending on how good the quality of the ccrc/nanorc.  
 
 Not all nanorc syntax is supported. As of now only the following syntax is supported:
 ```
- color fg-color-name "regular expression"
+ color fg-color-name "<regular expression>"
 ```
 
 In order to get coloring in nano when editing the ccrc files you need to copy  
