@@ -31,10 +31,11 @@ where
 ```
 The quality of the coloring of syntax varies depending on how good the quality of the ccrc/nanorc.  
 
-Not all nanorc syntax is supported. As of now only the following syntax is supported:
+Not all nanorc syntax is supported. As of now only the following syntax is supported in .ccrc and .nanorc files:
 ```
  color fg-color-name "<regular expression>"
 ```
+It is also important to note that the order in which these color settings are set is important.
 
 In order to get coloring in nano when editing the ccrc files you need to copy  
 the ccrc.nanorc file under nanorc to ~/.nano. Then run the following command:
