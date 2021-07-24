@@ -202,20 +202,33 @@ end;
 function IsOkToPostRender(li: integer; i: integer; len: integer) : boolean;
 var
     j: integer;
+    sumPre : integer;
+    sumPost : integer;
 begin
     IsOkToPostRender := true;
     
-    for j := 1 to li do
-    begin
-        if (j <> li) then
-        begin
-            if ((i >= g_lineItems[j].m_i) and (i <= (g_lineItems[j].m_i+g_lineItems[j].m_len+length(g_lineItems[j].m_post))))
-                or ((i <= g_lineItems[j].m_i) and ((i+len) >= (g_lineItems[j].m_i))) then
-            begin
-                IsOkToPostRender := false;
-                exit;
-            end
-        end;
+	sumPre := 0;
+	sumPost := 0;
+	
+    for j:= 1 to li do
+	begin
+		if ( j <> li) then
+		begin
+			if (((i+sumPre+sumPost) <= (g_lineItems[j].m_i+sumPre+sumPost))
+				and
+				((i+sumPre+sumPost+len) > (g_lineItems[j].m_i+sumPre+sumPost)))
+			   or
+			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len))
+			   or
+			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len+length(g_lineItems[j].m_pre)))
+			then
+        	begin
+          		IsOkToPostRender := false;
+          		exit;
+     		end;
+     	end;
+     	sumPre := length(g_lineItems[j].m_pre);
+     	sumPost := length(g_lineItems[j].m_post);
     end;
 end;
 
