@@ -333,7 +333,8 @@ begin
         reset(f);
     
         readln(f,input);
-        
+
+        write(g_clr_reset);
         while not eof(f) do 
         begin
             temp := input;
@@ -361,6 +362,7 @@ begin
     else
     begin
         readln(input);
+        write(g_clr_reset);
         while not eof do 
         begin
             temp := input;
