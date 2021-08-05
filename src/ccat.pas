@@ -69,13 +69,13 @@ var
     //
     // <syntax>.rc/<syntax>.nanorc color records
     //
-    g_colorItems: array [1..1000] of TColorItem;
+    g_colorItems: array [1..100000] of TColorItem;
     g_ciIndex: integer = 1;
 
     //
     // line items for each input (each line of input)
     //
-    g_lineItems: array [1..1000] of TLineItem;
+    g_lineItems: array [1..100000] of TLineItem;
     g_liIndex: integer = 1;
 
     //
