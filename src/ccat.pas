@@ -220,7 +220,7 @@ begin
 			   or
 			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len))
 			   or
-			    ((i+sumPre+sumPost+len) <= (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len+length(g_lineItems[j].m_pre)))
+			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len+length(g_lineItems[j].m_pre)))
 			then
         	begin
           		IsOkToPostRender := false;
