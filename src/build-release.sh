@@ -1,5 +1,5 @@
 #!/bin/bash
-#: Title       : build.sh
+#: Title       : build-release.sh
 #: Date        : 2020-12-25
 #: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
 #: Version     : 1.0
