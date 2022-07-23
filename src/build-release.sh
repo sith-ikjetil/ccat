@@ -4,5 +4,15 @@
 #: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
 #: Version     : 1.0
 #: Description : Builds ccat.
-fpc ./ccat.pas
+echo "Compiling ccat ..."
+echo "> using release build <"
 
+fpc ./ccat.pas
+if [[ $? -eq 0 ]]
+then
+    echo "> ccat build ok <"
+else
+    echo "> ccat build error <"
+fi
+
+echo "> build process complete <"
