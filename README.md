@@ -6,14 +6,16 @@ Color Linux cat type command.
 Uses ccrc/nanorc files for coloring information.  
 
 Expects 1) ccrc files to be found under ~/.ccat/  
-Expects - if not found under 1) - 2) nanorc files to be found under ~/.nano/  
+Expects - if not found under 1) - 2) nanorc files to be found under ~/.nano/
+
+NB! nanorc files can be found here: [https://github.com/scopatz/nanorc]
 
 **Compiles with free pascal compiler.**  
 
 Check out officially supported ccrc files under ccrc directory here: [https://github.com/sith-ikjetil/ccat/tree/main/ccrc]  
 
 Usage:  
-```
+```bash
  ccat test.pas
 or
  ccat --syntax=pascal < test.pas
