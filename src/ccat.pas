@@ -13,11 +13,22 @@ uses
 
 type
     //
+    // An input line item comment.
+    //
+    TMlCommentItem = record
+        m_startTag: string;
+        m_endTag: string;
+        m_color: string;
+    end;
+
+    //
     // A syntax file's reg expr. and its color item
     //
     TColorItem = record
-        m_color: string;    // color
-        m_re: string;       // regular expression
+        m_color: string;        // color
+        m_re: string;           // regular expression
+        m_ml: TMlCommentItem;   // multiline item
+        m_isMlComment: Boolean; // is multiline item
     end;
 
     //
@@ -83,6 +94,8 @@ var
     //
     g_syntax: string;           // given or guessed syntax
     g_filename: string = '';    // filename if file argument
+    g_isInMlComment: Boolean = False; // is in multiline comment rendering
+    g_mlColor: string = ''; // multiline color is in
     
 //
 // RenderHelp
@@ -155,6 +168,7 @@ end;
 procedure PreRenderInput(input: string; ci: TColorItem);
 var
     re: TRegExpr;
+    re2: TRegExpr;
     i: integer;
     temp: string;
     right: string;
@@ -162,7 +176,54 @@ var
 begin
     temp := input;
     try
-        try
+        try 
+            if not g_isInMlComment and ci.m_isMlComment then
+            begin
+                re2 := TRegExpr.Create(ci.m_ml.m_startTag);
+                if re2.Exec(temp) then
+                begin
+                    temp_item.m_i := pos(re2.Match[0],temp);
+                    temp_item.m_len := length(re2.Match[0]);
+                    temp_item.m_pre := ci.m_ml.m_color;
+                    g_mlColor := ci.m_ml.m_color;
+                    temp_item.m_post := g_clr_reset;
+
+                    g_lineItems[g_liIndex] := temp_item;
+                    g_liIndex += 1;
+
+                    g_isInMlComment := True;    
+                end;
+                Exit();
+            end;
+
+            if g_isInMlComment then
+            begin
+                re2 := TRegExpr.Create(ci.m_ml.m_endTag);
+                if re2.Exec(temp) then
+                begin
+                    temp_item.m_i := pos(re2.Match[0],temp);
+                    temp_item.m_len := length(re2.Match[0]) + 1;
+                    temp_item.m_pre := ci.m_ml.m_color;
+                    temp_item.m_post := g_clr_reset;
+
+                    g_lineItems[g_liIndex] := temp_item;
+                    g_liIndex += 1;
+
+                    g_isInMlComment := False;        
+                end
+                else 
+                begin
+                    temp_item.m_i := 1;
+                    temp_item.m_len := length(temp) + 1;
+                    temp_item.m_pre := g_mlColor;
+                    temp_item.m_post := g_clr_reset;
+
+                    g_lineItems[g_liIndex] := temp_item;
+                    g_liIndex += 1;
+                end;
+                Exit();
+            end;
+          
             re := TRegExpr.Create(ci.m_re);
             if re.Exec(temp) then
             begin
@@ -499,6 +560,7 @@ end;
 procedure AddItemToColorArray(line: string);
 var
     re: TRegExpr;
+    reMl: TRegExpr;
     temp_item: TColorItem;
     temp: string;
 begin
@@ -508,14 +570,34 @@ begin
         begin
             temp_item.m_color := '';
             temp_item.m_re := '';
+            temp_item.m_isMlComment := False;
             try
                 try
+                    reMl := TRegExpr.Create('(color)[ ]+(.*)[ ]+start="(.*)"[ ]+end="(.*)"');
+                    if reMl.Exec(line) then
+                    begin
+                        temp_item.m_isMlComment := True;
+                        temp_item.m_color := TranslateColorNameToColorValue(NormalizeRegExPattern(reMl.Match[2]));
+                        temp_item.m_ml.m_color := TranslateColorNameToColorValue(NormalizeRegExPattern(reMl.Match[2]));
+                        temp_item.m_ml.m_startTag := NormalizeRegExPattern(reMl.Match[3]);
+                        temp_item.m_ml.m_endTag := NormalizeRegExPattern(reMl.Match[4]);
+
+                        if (length(temp_item.m_color) > 0) then
+                        begin
+                            g_colorItems[g_ciIndex] := temp_item;
+                            g_ciIndex += 1;
+                        end;
+
+                        Exit();
+                    end;
+                    
                     re := TRegExpr.Create('(icolor|color)[ ]+(.*)[ ]+"(.*)"');
                     if re.Exec(line) then
                     begin
                         temp := re.Match[2];
                         temp := trim(temp);
 
+                        temp_item.m_isMlComment := False;
                         temp_item.m_color := TranslateColorNameToColorValue(temp);
                         temp_item.m_re := NormalizeRegExPattern(re.Match[3]);
 
@@ -537,7 +619,7 @@ end;
 //
 // LoadSyntaxNanoRc
 //
-// (i): Loads syntax information from 1) ~/.ccat/<syntax>.rc, then 
+// (i): Loads syntax information from 1) ~/.ccat/<syntax>.ccrc, then 
 //      if not found 2) ~/.nano/<syntax>.nanorc
 //
 function LoadSyntaxNanoRc() : boolean;
@@ -702,7 +784,7 @@ begin
     else if (paramcount = 1) and IsArgIn('--syntax') then       // One argument is syntax and assume input from stdin
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        if LoadSyntaxNanoRc()                   // Load <syntax>.rc/<syntax>.nanorc and check if ok
+        if LoadSyntaxNanoRc()                   // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
         then RenderColored()                    // Render colored all looks good
         else RenderRaw();                       // Render raw
     end
@@ -719,7 +801,7 @@ begin
         g_syntax := GuessSyntax(g_filename);    // Guess syntax
         if length(g_syntax) > 0 then 
         begin
-            if LoadSyntaxNanoRc()               // Load <syntax>.rc/<syntax>.nanorc and check if ok
+            if LoadSyntaxNanoRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
             then RenderColored()                // Render colored all looks good
             else RenderRaw();                   // Render raw
         end
@@ -737,7 +819,7 @@ begin
         end
         else
         begin
-            if LoadSyntaxNanoRc()               // Load <syntax>.rc/<syntax>.nanorc and check if ok
+            if LoadSyntaxNanoRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
             then RenderColored()                // Render colored all looks good
             else RenderRaw();                   // Render raw
         end;
