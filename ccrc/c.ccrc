@@ -1,4 +1,7 @@
 # *.h, *.hpp, *.c, *.cpp files
+# Comments
+color green "//.*$"
+color green start="\/\*" end="\*\/"
 color green "//.*$"
 color brightyellow "<["]?.*["]?>"
 color yellow "\"[^"]*\""

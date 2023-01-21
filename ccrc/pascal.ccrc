@@ -1,4 +1,8 @@
 # .pas files
+# Comments
+18 color green "//.*$"
+19 color green start="\{" end="\}"
+20 color green start="\(\*" end="\*\)"
 # Text Strings
 color brightmagenta "'[^']*'"
 # Reserved Keywords Turbo Pascal
@@ -14,7 +18,3 @@ color brightgreen "(\bString\b|\bInteger\b|\bReal\b|\bChar\b|\bBoolean\b|\bWord\
 color yellow "(?i)(\blowercase\b|\bassignfile\b|\bclose\b|\bparamstr\b|\bparamcount\b|\blength\b|\bgetuserdir\b|\bassign\b|\brewrite\b|\bcomparestr\b|\bdelete\b|\bcomparetext\b|\bpos\b|\bleftstr\b|\brightstr\b|\bcopy\b|\bfileexists\b|\breset\b|\breadln\b|\bread\b|\bwriteln\b|\bwrite\b|\beof\b|\beol\b|\bnil\b|\bclrscr\b|\btextcolor\b|\btextbackground\b)"
 # Operators
 color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}]+"
-# Comments
-color green "//.*$"
-color green start="\{" end="\}"
-color green start="\(\*" end="\*\)"
