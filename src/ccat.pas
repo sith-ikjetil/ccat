@@ -192,8 +192,25 @@ begin
                     g_liIndex += 1;
 
                     g_isInMlComment := True;    
+
+                    re2 := TRegExpr.Create(ci.m_ml.m_endTag);
+                    if re2.Exec(temp) then
+                    begin
+                        temp_item.m_i := pos(re2.Match[0],temp);
+                        temp_item.m_len := length(re2.Match[0]) + 1;
+                        temp_item.m_pre := ci.m_ml.m_color;
+                        temp_item.m_post := g_clr_reset;
+
+                        g_lineItems[g_liIndex] := temp_item;
+                        g_liIndex += 1;
+
+                        g_isInMlComment := False;        
+                    end
+                    else
+                    begin
+                        Exit();
+                    end;
                 end;
-                Exit();
             end;
 
             if g_isInMlComment then
@@ -201,17 +218,17 @@ begin
                 re2 := TRegExpr.Create(ci.m_ml.m_endTag);
                 if re2.Exec(temp) then
                 begin
-                    temp_item.m_i := pos(re2.Match[0],temp);
-                    temp_item.m_len := length(re2.Match[0]) + 1;
-                    temp_item.m_pre := ci.m_ml.m_color;
+                    temp_item.m_i := 1;
+                    temp_item.m_len := pos(re2.Match[0],temp) + 1;
+                    temp_item.m_pre := g_mlColor;
                     temp_item.m_post := g_clr_reset;
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
 
-                    g_isInMlComment := False;        
+                    g_isInMlComment := False;     
                 end
-                else 
+                else
                 begin
                     temp_item.m_i := 1;
                     temp_item.m_len := length(temp) + 1;
@@ -220,10 +237,11 @@ begin
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
+
+                    Exit();
                 end;
-                Exit();
             end;
-          
+
             re := TRegExpr.Create(ci.m_re);
             if re.Exec(temp) then
             begin
