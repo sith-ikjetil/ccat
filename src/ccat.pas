@@ -173,7 +173,13 @@ var
     temp: string;
     right: string;
     temp_item: TLineItem;
+    mlFound: Boolean;
+    mlStartIndex: integer;
+    //mlEndIndex: integer;
 begin
+    mlFound := False;
+    mlStartIndex := -1;
+    //mlEndIndex := -1;
     temp := input;
     try
         try 
@@ -182,11 +188,13 @@ begin
                 re2 := TRegExpr.Create(ci.m_ml.m_startTag);
                 if re2.Exec(temp) then
                 begin
+                    mlFound := true;
                     temp_item.m_i := pos(re2.Match[0],temp);
+                    mlStartIndex := temp_item.m_i;
                     temp_item.m_len := length(re2.Match[0]);
                     temp_item.m_pre := ci.m_ml.m_color;
                     g_mlColor := ci.m_ml.m_color;
-                    temp_item.m_post := g_clr_reset;
+                    temp_item.m_post := '';
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
@@ -197,6 +205,7 @@ begin
                     if re2.Exec(temp) then
                     begin
                         temp_item.m_i := pos(re2.Match[0],temp);
+                        //mlEndIndex := temp_item.m_i;
                         temp_item.m_len := length(re2.Match[0]) + 1;
                         temp_item.m_pre := ci.m_ml.m_color;
                         temp_item.m_post := g_clr_reset;
@@ -206,14 +215,10 @@ begin
 
                         g_isInMlComment := False;        
                     end
-                    else
-                    begin
-                        Exit();
-                    end;
                 end;
             end;
 
-            if g_isInMlComment then
+            if g_isInMlComment and not mlFound then
             begin
                 re2 := TRegExpr.Create(ci.m_ml.m_endTag);
                 if re2.Exec(temp) then
@@ -226,7 +231,9 @@ begin
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
 
-                    g_isInMlComment := False;     
+                    g_isInMlComment := False;
+                    mlFound := False;
+                    mlStartIndex := -1;     
                 end
                 else
                 begin
@@ -242,6 +249,8 @@ begin
                 end;
             end;
 
+            //writeln('re: '+ ci.m_re);
+
             re := TRegExpr.Create(ci.m_re);
             if re.Exec(temp) then
             begin
@@ -249,9 +258,12 @@ begin
                 temp_item.m_len := length(re.Match[0]);
                 temp_item.m_pre := ci.m_color;
                 temp_item.m_post := g_clr_reset;
-
-                g_lineItems[g_liIndex] := temp_item;
-                g_liIndex += 1;        
+                
+                if ((not mlFound) OR (mlFound and (temp_item.m_i < mlStartIndex))) then
+                begin 
+                    g_lineItems[g_liIndex] := temp_item;
+                    g_liIndex += 1;        
+                end;
 
                 while re.ExecNext do
                 begin
@@ -262,8 +274,11 @@ begin
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
 
-                    g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;  
+                    if ((not mlFound) OR (mlFound and (temp_item.m_i < mlStartIndex))) then
+                    begin 
+                        g_lineItems[g_liIndex] := temp_item;
+                        g_liIndex += 1;        
+                    end;  
                 end;
             end;
         except
