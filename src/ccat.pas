@@ -96,6 +96,9 @@ var
     g_filename: string = '';    // filename if file argument
     g_isInMlComment: Boolean = False; // is in multiline comment rendering
     g_mlColor: string = ''; // multiline color is in
+    g_mlStartIndex: integer = -1;
+    g_mlEndIndex: integer = -1;
+    g_mlFound: Boolean = False;
     
 //
 // RenderHelp
@@ -173,14 +176,10 @@ var
     temp: string;
     right: string;
     temp_item: TLineItem;
-    mlFound: Boolean;
-    mlStartIndex: integer;
-    //mlEndIndex: integer;
+    mlFlag: Boolean;
 begin
-    mlFound := False;
-    mlStartIndex := -1;
-    //mlEndIndex := -1;
     temp := input;
+    mlFlag := False;
     try
         try 
             if not g_isInMlComment and ci.m_isMlComment then
@@ -188,13 +187,15 @@ begin
                 re2 := TRegExpr.Create(ci.m_ml.m_startTag);
                 if re2.Exec(temp) then
                 begin
-                    mlFound := true;
+                    g_mlFound := true;
+                    mlFlag := true;
                     temp_item.m_i := pos(re2.Match[0],temp);
-                    mlStartIndex := temp_item.m_i;
                     temp_item.m_len := length(re2.Match[0]);
                     temp_item.m_pre := ci.m_ml.m_color;
-                    g_mlColor := ci.m_ml.m_color;
                     temp_item.m_post := '';
+
+                    g_mlColor := ci.m_ml.m_color;
+                    g_mlStartIndex := temp_item.m_i;
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
@@ -205,20 +206,22 @@ begin
                     if re2.Exec(temp) then
                     begin
                         temp_item.m_i := pos(re2.Match[0],temp);
-                        //mlEndIndex := temp_item.m_i;
-                        temp_item.m_len := length(re2.Match[0]) + 1;
+                        temp_item.m_len := length(re2.Match[0]);
                         temp_item.m_pre := ci.m_ml.m_color;
                         temp_item.m_post := g_clr_reset;
 
+                        g_mlEndIndex := temp_item.m_i + temp_item.m_len;
+                        
                         g_lineItems[g_liIndex] := temp_item;
                         g_liIndex += 1;
 
-                        g_isInMlComment := False;        
+                        g_isInMlComment := False;
+                        g_mlFound := True;        
                     end
                 end;
             end;
 
-            if g_isInMlComment and not mlFound then
+            if g_isInMlComment and ci.m_isMlComment and not mlFlag then
             begin
                 re2 := TRegExpr.Create(ci.m_ml.m_endTag);
                 if re2.Exec(temp) then
@@ -228,12 +231,14 @@ begin
                     temp_item.m_pre := g_mlColor;
                     temp_item.m_post := g_clr_reset;
 
+                    g_mlEndIndex := temp_item.m_i + temp_item.m_len - 1;
+
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
 
                     g_isInMlComment := False;
-                    mlFound := False;
-                    mlStartIndex := -1;     
+                    g_mlFound := False;
+                    g_mlStartIndex := -1;
                 end
                 else
                 begin
@@ -244,12 +249,13 @@ begin
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
-
-                    Exit();
                 end;
             end;
 
-            //writeln('re: '+ ci.m_re);
+            if ci.m_isMlComment then
+            begin
+                Exit();
+            end;
 
             re := TRegExpr.Create(ci.m_re);
             if re.Exec(temp) then
@@ -259,7 +265,7 @@ begin
                 temp_item.m_pre := ci.m_color;
                 temp_item.m_post := g_clr_reset;
                 
-                if ((not mlFound) OR (mlFound and (temp_item.m_i < mlStartIndex))) then
+                if ((not g_mlFound) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
                 begin 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;        
@@ -274,7 +280,7 @@ begin
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
 
-                    if ((not mlFound) OR (mlFound and (temp_item.m_i < mlStartIndex))) then
+                    if ((not g_mlFound) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex))) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex)) then
                     begin 
                         g_lineItems[g_liIndex] := temp_item;
                         g_liIndex += 1;        
@@ -284,7 +290,7 @@ begin
         except
         end;
     finally
-        re.Free();
+        
     end;
 end;
 
@@ -436,6 +442,9 @@ begin
             begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
+            g_mlStartIndex := -1;
+            g_mlEndIndex := -1;
+            //g_mlFound := False;
             SortLineItemsByIndex(g_lineItems,g_liIndex-1);
             temp := PostRenderInput(temp);    
             writeln(temp);
@@ -449,6 +458,9 @@ begin
         begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
+        g_mlStartIndex := -1;
+        g_mlEndIndex := -1;
+        //g_mlFound := False;
         SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
         writeln(temp);
@@ -464,6 +476,9 @@ begin
             begin
                 PreRenderInput(temp, g_colorItems[i]);
             end;
+            g_mlStartIndex := -1;
+            g_mlEndIndex := -1;
+            //g_mlFound := False;
             SortLineItemsByIndex(g_lineItems,g_liIndex-1);
             temp := PostRenderInput(temp);
             writeln(temp);
@@ -475,6 +490,9 @@ begin
         begin
             PreRenderInput(temp, g_colorItems[i]);
         end;
+        g_mlStartIndex := -1;
+        g_mlEndIndex := -1;
+        //g_mlFound := False;
         SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
         writeln(temp);
@@ -620,8 +638,6 @@ begin
                             g_colorItems[g_ciIndex] := temp_item;
                             g_ciIndex += 1;
                         end;
-
-                        Exit();
                     end;
                     
                     re := TRegExpr.Create('(icolor|color)[ ]+(.*)[ ]+"(.*)"');
