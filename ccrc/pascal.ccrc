@@ -1,8 +1,8 @@
 # .pas files
 # Comments
-18 color green "//.*$"
-19 color green start="\{" end="\}"
-20 color green start="\(\*" end="\*\)"
+color green "//.*$"
+color green start="\{" end="\}"
+color green start="\(\*" end="\*\)"
 # Text Strings
 color brightmagenta "'[^']*'"
 # Reserved Keywords Turbo Pascal
