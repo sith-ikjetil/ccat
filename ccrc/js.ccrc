@@ -1,7 +1,13 @@
 # *.js files
+## Comments
+color green "//.*$"
+color green start="\/\*" end="\*\/"
+
+## 
 color yellow "\<[-+]?([1-9][0-9]*|0[0-7]*|0x[0-9a-fA-F]+)([uU][lL]?|[lL][uU]?)?\>"
 color yellow "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[fFlL]?"
 color yellow "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
+
 ## Keywords
 color brightblue "\<(true|false|break|case|catch|continue|default|delete|do|else|finally)\>"
 color brightblue "\<(for|function|if|in|instanceof|new|null|return|switch)\>"
@@ -21,6 +27,3 @@ color brightmagenta "'[^\']*'"
 ## Operators
 color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}]+"
 
-## Comments
-color brightblue start="^\s*/\*" end="\*/"
-color brightblue "^\s*//.*$"

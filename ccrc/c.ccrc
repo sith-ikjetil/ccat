@@ -2,8 +2,7 @@
 # Comments
 color green "//.*$"
 color green start="\/\*" end="\*\/"
-color green "//.*$"
-color brightyellow "<["]?.*["]?>"
+# 
 color yellow "\"[^"]*\""
 color brightblue "(\binclude\b|\bdefine\b|\bifdef\b|\belse\b|\bendif\b|\bifndef\b|\bif\b|\belse\b|\belif\b|\bline\b|\berror\b|\bpragma\b|\bundef\b)"
 color brightgreen "(\bchar\b|\bint\b|\bvoid\b|\bfloat\b|\bdouble\b|\bvolatile\b|\bconst\b|\bmutable\b|\bclass\b|\bauto\b|\bbool\b|\benum\b|\bexplicit\b|\bextern\b|\bexport\b|\blong\b|\binline\b|\bnamespace\b|\bregister\b|\bshort\b|\bsigned\b|\bstatic\b|\bstruct\b|\btemplate\b|\btypedef\b|\btypename\b|\bunion\b|\bunsigned\b|\bvirtual\b|\bwchar_t\b|\bstring\b|\bvector\b|\bstringstream\b|\bmap\b|\bcout\b|\bendl\b)"

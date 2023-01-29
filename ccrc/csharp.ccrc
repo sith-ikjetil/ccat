@@ -1,4 +1,8 @@
 # *.cs
+# Comments
+color green "//.*$"
+color green start="\/\*" end="\*\/"
+# 
 color brightmagenta  "class +[A-Za-z0-9]+ *((:) +[A-Za-z0-9.]+)?"
 color magenta   "@[A-Za-z]+"
 color brightblue "[A-Za-z_][A-Za-z0-9_]*[[:space:]]*[()]"
@@ -13,5 +17,4 @@ color blue   "\<([0-9._]+|0x[A-Fa-f0-9_]+|0b[0-1_]+)[FL]?\>"
 color yellow ""(\\.|[^"])*"|'(\\.|[^'])*'"
 color magenta   "\\([btnfr]|'|\"|\\)"
 color magenta   "\\u[A-Fa-f0-9]{4}"
-color brightblack "(^|[[:space:]])//.*"
-color brightblack start="^\s*/\*" end="\*/"
+
