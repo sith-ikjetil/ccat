@@ -39,6 +39,12 @@ Not all nanorc syntax is supported. As of now only the following syntax is suppo
 ```
 It is also important to note that the order in which these color settings are set is important.
 
+Also in .ccrc files and .nanorc files the following multi line comments are supported from version 0.5.
+```
+ color fg-color-name start="<regular expression>" end="<regular expression>"
+```
+Please note that comments and multi line comments should be placed first in the .ccrc or .nanorc file.
+
 In order to get coloring in nano when editing the ccrc files you need to copy  
 the ccrc.nanorc file under nanorc to ~/.nano. Then run the following command:
 ```
