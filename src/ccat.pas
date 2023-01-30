@@ -99,6 +99,7 @@ var
     g_mlStartIndex: integer = -1;
     g_mlEndIndex: integer = -1;
     g_mlFound: Boolean = False;
+    g_mlFoundInComment: Boolean = False;
     
 //
 // RenderHelp
@@ -180,6 +181,7 @@ var
 begin
     temp := input;
     mlFlag := False;
+
     try
         try 
             if not g_isInMlComment and ci.m_isMlComment then
@@ -231,7 +233,7 @@ begin
                     temp_item.m_pre := g_mlColor;
                     temp_item.m_post := g_clr_reset;
 
-                    g_mlEndIndex := temp_item.m_i + temp_item.m_len - 1;
+                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + 1;
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
@@ -249,10 +251,12 @@ begin
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
+
+                    g_mlFoundInComment := True;
                 end;
             end;
 
-            if ci.m_isMlComment then
+            if ci.m_isMlComment or g_mlFoundInComment then
             begin
                 Exit();
             end;
@@ -265,8 +269,8 @@ begin
                 temp_item.m_pre := ci.m_color;
                 temp_item.m_post := g_clr_reset;
                 
-                if ((not g_mlFound) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
-                begin 
+                if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
+                begin
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;        
                 end;
@@ -280,7 +284,7 @@ begin
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
 
-                    if ((not g_mlFound) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex))) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex)) then
+                    if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex))) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex)) then
                     begin 
                         g_lineItems[g_liIndex] := temp_item;
                         g_liIndex += 1;        
@@ -316,11 +320,11 @@ begin
 		begin
 			if (((i+sumPre+sumPost) <= (g_lineItems[j].m_i+sumPre+sumPost))
 				and
-				((i+sumPre+sumPost+len) > (g_lineItems[j].m_i+sumPre+sumPost)))
+				((i+sumPre+sumPost+len) >= (g_lineItems[j].m_i+sumPre+sumPost)))
 			   or
-			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len))
+			    ((i+sumPre+sumPost+len) <= (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len))
 			   or
-			    ((i+sumPre+sumPost+len) < (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len+length(g_lineItems[j].m_pre)))
+			    ((i+sumPre+sumPost+len) <= (g_lineItems[j].m_i+sumPre+sumPost+g_lineItems[j].m_len+length(g_lineItems[j].m_pre)))
 			then
         	begin
           		IsOkToPostRender := false;
@@ -444,6 +448,7 @@ begin
             end;
             g_mlStartIndex := -1;
             g_mlEndIndex := -1;
+            g_mlFoundInComment := False;
             //g_mlFound := False;
             SortLineItemsByIndex(g_lineItems,g_liIndex-1);
             temp := PostRenderInput(temp);    
@@ -460,6 +465,7 @@ begin
         end;
         g_mlStartIndex := -1;
         g_mlEndIndex := -1;
+        g_mlFoundInComment := False;
         //g_mlFound := False;
         SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
@@ -478,6 +484,7 @@ begin
             end;
             g_mlStartIndex := -1;
             g_mlEndIndex := -1;
+            g_mlFoundInComment := False;
             //g_mlFound := False;
             SortLineItemsByIndex(g_lineItems,g_liIndex-1);
             temp := PostRenderInput(temp);
@@ -492,6 +499,7 @@ begin
         end;
         g_mlStartIndex := -1;
         g_mlEndIndex := -1;
+        g_mlFoundInComment := False;
         //g_mlFound := False;
         SortLineItemsByIndex(g_lineItems,g_liIndex-1);
         temp := PostRenderInput(temp);
