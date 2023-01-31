@@ -4,9 +4,9 @@ color green "//.*$"
 color green start="\/\*" end="\*\/"
 
 ## 
-color yellow "\<[-+]?([1-9][0-9]*|0[0-7]*|0x[0-9a-fA-F]+)([uU][lL]?|[lL][uU]?)?\>"
-color yellow "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[fFlL]?"
-color yellow "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
+color brightmagenta "\<[-+]?([1-9][0-9]*|0[0-7]*|0x[0-9a-fA-F]+)([uU][lL]?|[lL][uU]?)?\>"
+color brightmagenta "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[fFlL]?"
+color brightmagenta "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
 
 ## Keywords
 color brightblue "\<(true|false|break|case|catch|continue|default|delete|do|else|finally)\>"
@@ -21,8 +21,8 @@ color brightgreen "\<(WeakMap|Map|WeakSet|Set|Symbol|Promise)\>"
 color brightgreen "\<(Number|Object|RegExp|String)\>"
 
 ## String
-color brightmagenta "\"[^\"]*\""
-color brightmagenta "'[^\']*'"
+color yellow "\"[^\"]*\""
+color yellow "'[^\']*'"
 
 ## Operators
 color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}]+"
