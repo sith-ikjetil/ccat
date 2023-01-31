@@ -1,7 +1,7 @@
 # .xml files
 color green start="<!DOCTYPE" end="[/]?>"
 color green start="<!--" end="-->"
-color cyan "<\?[0-9A-Za-z"'= ]*\?>"
+color cyan "<\?[0-9A-Za-z ]*\?>"
 color cyan "<\?"
 color cyan "\?>"
 color brightred      "[ ]{1}[\w]+="
