@@ -1,9 +1,13 @@
-## Python syntax highlighting rules for Nano
+# .py
 
-## block comments
+# block comments
 color green "\#.*$"
-color green start=""""[^"]" end="""""
-color green start="'''[^']" end="'''"
+color green start="\"\"\"" end="\"\"\""
+color green start="'''" end="'''"
+
+# string
+color yellow "\".*\""
+color yellow "\'.*\'"
 
 ## built-in objects
 color cyan "\<(None|self|True|False)\>"
@@ -36,22 +40,8 @@ color magenta "[(){}]" "\[" "\]"
 ## numbers
 color brightyellow "\b(([1-9][0-9]+)|0+)\.[0-9]+j?\b" "\b([1-9][0-9]*[Lj]?)\b" "\b0o?[0-7]*L?\b" "\b0x[1-9a-f][0-9a-f]*L?\b" "\b0b[01]+\b"
 
-## String
-color yellow "\"[^\"]*\""
-color yellow "'[^\']*'"
-
 ## Operators
 color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}]+"
-
-## strings
-color yellow "['][^']*[^\\][']" "[']{3}.*[^\\][']{3}"
-color yellow "["][^"]*[^\\]["]" "["]{3}.*[^\\]["]{3}"
-
-## comments
-color green "^#.*|[[:space:]]#.*$"
-
-## trailing spaces
-color green "[[:space:]]+$"
 
 ## reminders
 color brightwhite "(FIXME|TODO|XXX)"

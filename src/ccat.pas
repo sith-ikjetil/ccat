@@ -205,7 +205,7 @@ begin
                     g_isInMlComment := True;    
 
                     re2 := TRegExpr.Create(ci.m_ml.m_endTag);
-                    if re2.Exec(temp) then
+                    if re2.Exec(temp) and (pos(re2.Match[0],temp) <> temp_item.m_i) then
                     begin
                         temp_item.m_i := pos(re2.Match[0],temp);
                         temp_item.m_len := length(re2.Match[0]);
@@ -229,11 +229,11 @@ begin
                 if re2.Exec(temp) then
                 begin
                     temp_item.m_i := 1;
-                    temp_item.m_len := pos(re2.Match[0],temp) + 1;
+                    temp_item.m_len := pos(re2.Match[0],temp) + length(ci.m_ml.m_endTag) - 1;
                     temp_item.m_pre := g_mlColor;
                     temp_item.m_post := g_clr_reset;
 
-                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + 1;
+                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + length(ci.m_ml.m_endTag) - 1;
 
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
