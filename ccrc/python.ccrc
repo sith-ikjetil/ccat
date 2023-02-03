@@ -1,7 +1,7 @@
 ## Python syntax highlighting rules for Nano
 
 ## block comments
-color green "\#$"
+color green "\#.*$"
 color green start=""""[^"]" end="""""
 color green start="'''[^']" end="'''"
 
