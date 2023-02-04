@@ -100,6 +100,7 @@ var
     g_mlEndIndex: integer = -1;
     g_mlFound: Boolean = False;
     g_mlFoundInComment: Boolean = False;
+    g_mlActive: TColorItem;
     
 //
 // RenderHelp
@@ -191,6 +192,7 @@ begin
                 re2 := TRegExpr.Create(ci.m_ml.m_startTag);
                 if re2.Exec(temp) then
                 begin
+                    g_mlActive := ci;
                     g_mlFound := true;
                     mlFlag := true;
                     temp_item.m_i := pos(re2.Match[0],temp);
@@ -231,7 +233,7 @@ begin
                 end;
             end;
 
-            if g_isInMlComment and ci.m_isMlComment and not mlFlag then
+            if g_isInMlComment and ci.m_isMlComment and not mlFlag and (ci.m_ml.m_startTag = g_mlActive.m_ml.m_startTag) then
             begin
                 re2 := TRegExpr.Create(ci.m_ml.m_endTag);
                 if re2.Exec(temp) then
@@ -263,7 +265,7 @@ begin
                 end;
             end;
 
-            if ci.m_isMlComment or g_mlFoundInComment then
+            if ci.m_isMlComment or g_mlFoundInComment or g_isInMlComment then
             begin
                 Exit();
             end;
@@ -275,7 +277,7 @@ begin
                 temp_item.m_len := length(re.Match[0]);
                 temp_item.m_pre := ci.m_color;
                 temp_item.m_post := g_clr_reset;
-                
+
                 if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
                 begin
                     g_lineItems[g_liIndex] := temp_item;
