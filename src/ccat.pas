@@ -174,6 +174,7 @@ var
     re: TRegExpr;
     re2: TRegExpr;
     i: integer;
+    l: integer;
     temp: string;
     right: string;
     temp_item: TLineItem;
@@ -181,6 +182,7 @@ var
 begin
     temp := input;
     mlFlag := False;
+    l := 0;
 
     try
         try 
@@ -204,21 +206,27 @@ begin
 
                     g_isInMlComment := True;    
 
+                    l := length(re2.Match[0]);
+
                     re2 := TRegExpr.Create(ci.m_ml.m_endTag);
-                    if re2.Exec(temp) and (pos(re2.Match[0],temp) <> temp_item.m_i) then
+                    if re2.Exec(temp) then
                     begin
-                        temp_item.m_i := pos(re2.Match[0],temp);
-                        temp_item.m_len := length(re2.Match[0]);
-                        temp_item.m_pre := ci.m_ml.m_color;
-                        temp_item.m_post := g_clr_reset;
+                        l += temp_item.m_i;
+                        if (pos(re2.Match[0],temp) >= l) then
+                        begin
+                            temp_item.m_i := pos(re2.Match[0],temp);
+                            temp_item.m_len := length(re2.Match[0]);
+                            temp_item.m_pre := ci.m_ml.m_color;
+                            temp_item.m_post := g_clr_reset;
 
-                        g_mlEndIndex := temp_item.m_i + temp_item.m_len;
-                        
-                        g_lineItems[g_liIndex] := temp_item;
-                        g_liIndex += 1;
+                            g_mlEndIndex := temp_item.m_i + temp_item.m_len;
+                            
+                            g_lineItems[g_liIndex] := temp_item;
+                            g_liIndex += 1;
 
-                        g_isInMlComment := False;
-                        g_mlFound := True;        
+                            g_isInMlComment := False;
+                            g_mlFound := True;
+                        end;        
                     end
                 end;
             end;
@@ -229,12 +237,11 @@ begin
                 if re2.Exec(temp) then
                 begin
                     temp_item.m_i := 1;
-                    temp_item.m_len := pos(re2.Match[0],temp) + length(ci.m_ml.m_endTag) - 1;
+                    temp_item.m_len := pos(re2.Match[0],temp) + length(re2.Match[0]) - 1;
                     temp_item.m_pre := g_mlColor;
                     temp_item.m_post := g_clr_reset;
 
-                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + length(ci.m_ml.m_endTag) - 1;
-
+                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + length(re2.Match[0]) - 1;
                     g_lineItems[g_liIndex] := temp_item;
                     g_liIndex += 1;
 
