@@ -3,11 +3,11 @@
 # block comments
 color green "\#.*$"
 color green start="\"\"\"" end="\"\"\""
-color green start="'''" end="'''"
+color green start="\'\'\'" end="\'\'\'"
 
 # string
-color yellow "\".*\""
-color yellow "\'.*\'"
+color yellow "\"[^"]*\""
+color yellow "\'[^']*\'"
 
 ## built-in objects
 color cyan "\<(None|self|True|False)\>"

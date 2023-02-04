@@ -4,7 +4,7 @@ color green "//.*$"
 color green start="\/\*" end="\*\/"
 
 # String
-color yellow "\".*\""
+color yellow "\"[^"]*\""
 color yellow "[@$]"
 
 # 
