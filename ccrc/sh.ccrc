@@ -10,4 +10,4 @@ color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}\<\>]+"
 # Comments
 color green "#.*$"
 # String Constants
-color green "\"[^"]*\""
+color yellow "\"[^"]*\""
