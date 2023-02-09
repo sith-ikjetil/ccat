@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '0.5';
+    g_version = '0.6';
 
     //
     // Colors
@@ -111,7 +111,7 @@ procedure RenderHelp();
 begin
     writeln('Usage: ccat [option]');
     writeln('Version: ', g_version);
-    writeln('Reads from standard input');
+    writeln('Reads from a file/standard input');
     writeln('<syntax> is a <syntax>.ccrc/<syntax>.nanorc file from ~/.ccat or ~/.nano');
     writeln();
     writeln('  --help               display this help screen and exit');
@@ -124,6 +124,7 @@ begin
     writeln('  cat f | ccat --syntax=pascal    Takes f and outputs using pascal syntax');
     writeln();
     writeln('Created by Kjetil Kristoffer Solberg <post@ikjetil.no>');
+    writeln('Written in Pascal for the Free Pascal Compiler');
     writeln();
 end;
 
