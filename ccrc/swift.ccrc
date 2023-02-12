@@ -1,0 +1,52 @@
+# .swift
+
+# Comments
+color green "//.*$"
+color green start="/\*\*" end="\*/"
+
+# Operators
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}]+"
+color brightyellow "[!]"
+
+# Statements
+color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws)\>"
+color brightblue  "\<(lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard)\>"
+color brightblue  "\<(protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
+
+# Keywords
+color cyan "\<(print)\>"
+color brightmagenta "\<(init)\>"
+
+# Attribute
+color red "(@+[a-zA-Z]+)"
+
+# Numbers / Decimal Literal 
+color brightmagenta "\<([0-9]+)\>"
+# Unicode Literal "U+"
+color brightmagenta "\<(U\++[0-9A-Z]+)\>"
+# Binary Literal "0b"
+color brightmagenta "\<(0b+[0-1]+)\>"
+# Octal Literal "0o"
+color brightmagenta "\<(0o+[0-7]+)\>"
+# Hexadecimal Literal "0x"
+color brightmagenta "\<(0x+[0-9A-Fa-f]+)\>"
+
+# Standard Types
+color brightblue "\<((U)?Int(8|16|32|64))\>"
+color brightblue "\<(true|false|nil)\>"
+color brightBlue "\<(UInt|Int|Double|String|Float|Bool|Dictionary|Array|Character|Range|Set|Bit|RawByte|Slice)\>"
+color brightblue "\<(UnicodeScalar|UnsafePointer|UnsafeMutablePointer)\>"
+color brightgreen "\<(AnyObject)\>"
+
+# Standard Type Aliases and Protocols
+color brightgreen "\<(AnyObject|AnyClass|GeneratorType|AnyGenerator|Element|Optional|Mirror)\>"
+color brightgreen "\<(UnicodeScalarType|IntMax|UIntMax|Void|Any|Comparable|Equatable|Hashable|SequenceType)\>"
+
+# Standard Libraries
+color cyan "\<(Foundation|Glibc|Darwin|XCTest)\>"
+
+# Text
+color red ""[^"]*""
+
+# Variable in Text
+color white start="\\\(" end="\)"
