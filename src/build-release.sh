@@ -4,8 +4,6 @@
 #: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
 #: Version     : 1.0
 #: Description : Builds ccat.
-error_message=""
-
 echo "Compiling ccat ..."
 echo "> using release build <"
 
@@ -15,7 +13,6 @@ then
     echo "> ccat build ok <"
 else
     echo "> ccat build error <"
-    error_message="with errors "
 fi
 
-echo "> build process complete" $error_message "<"
+echo "> build process complete <"
