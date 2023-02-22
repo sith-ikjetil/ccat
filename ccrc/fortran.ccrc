@@ -1,0 +1,49 @@
+# .f, .for, .f90, .f95, .f03
+
+color green "!.*$"
+color brightmagenta "\'[^']*'"
+color brightred "\<[0-9]+\>" 
+
+icolor brightblue "(?i)(action|advance|all|allocatable|allocated|any|apostrophe)"
+icolor brightblue "(?i)(append|asis|assign|assignment|associated|character|common)"
+icolor brightblue "(?i)(complex|data|default|delim|dimension|double precision)"
+icolor brightblue "(?i)(elemental|epsilon|external|file|fmt|form|format|huge)"
+icolor brightblue "(?i)(implicit|include|index|inquire|integer|intent|interface)"
+icolor brightblue "(?i)(intrinsic|iostat|kind|logical|module|none|null|only)"
+icolor brightblue "(?i)(operator|optional|pack|parameter|pointer|position|private)"
+icolor brightblue "(?i)(program|public|real|recl|recursive|selected_int_kind)"
+icolor brightblue "(?i)(selected_real_kind|subroutine|status)"
+
+icolor cyan "(?i)(abs|achar|adjustl|adjustr|allocate|bit_size|call|char)" 
+icolor cyan "(?i)(close|contains|count|cpu_time|cshift|date_and_time)" 
+icolor cyan "(?i)(deallocate|digits|dot_product|eor|eoshift|function|iachar)" 
+icolor cyan "(?i)(iand|ibclr|ibits|ibset|ichar|ieor|iolength|ior|ishft|ishftc)" 
+icolor cyan "(?i)(lbound|len|len_trim|matmul|maxexponent|maxloc|maxval|merge)" 
+icolor cyan "(?i)(minexponent|minloc|minval|mvbits|namelist|nearest|nullify)" 
+icolor cyan "(?i)(open|pad|present|print|product|pure|quote|radix)" 
+icolor cyan "(?i)(random_number|random_seed|range|read|readwrite|replace)" 
+icolor cyan "(?i)(reshape|rewind|save|scan|sequence|shape|sign|size|spacing)" 
+icolor cyan "(?i)(spread|sum|system_clock|target|transfer|transpose|trim)" 
+icolor cyan "(?i)(ubound|unpack|verify|write|tiny|type|use|yes)"
+
+icolor brightblue "(.and.|case|do|else|else?if|else?where|end|end?do|end?if)"
+icolor brightblue "(end?select|.eqv.|forall|if|lge|lgt|lle|llt|.neqv.|.not.)"
+icolor brightblue "(.or.|repeat|select case|then|where|while)"
+
+icolor magenta "(continue|cycle|exit|go?to|result|return)"
+
+#Operators
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}%]+"
+
+# Add preprocessor commands.
+color brightcyan "^[[:space:]]*#[[:space:]]*(define|include|(un|ifn?)def|endif|el(if|se)|if|warning|error)"
+
+## String highlighting.  
+icolor cyan "<[^=     ]*>" ""(\\.|[^"])*""
+icolor cyan "<[^=     ]*>" "'(\\.|[^"])*'"
+
+## Comment highlighting
+icolor brightred "!.*$" "(^[Cc]| [Cc]) .*$"
+
+## Trailing spaces
+color ,green "[[:space:]]+$"

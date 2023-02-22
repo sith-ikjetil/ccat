@@ -775,10 +775,10 @@ var
     ext: string;
 begin
     GuessSyntax := 'text';
-
+    
     try
         try
-            re := TRegExpr.Create('\.[A-Za-z_]+$');
+            re := TRegExpr.Create('\.[0-9A-Za-z_]+$');
             if re.Exec(fname) then
             begin
                 ext := LowerCase(re.Match[0]);
@@ -799,9 +799,6 @@ begin
                     '.cs': GuessSyntax := 'csharp';
                     '.css': GuessSyntax := 'css';
                     '.csv': GuessSyntax := 'csv';
-                    '.f': GuessSyntax := 'fortran';
-                    '.f90': GuessSyntax := 'fortran';
-                    '.ff95': GuessSyntax := 'fortran';
                     '.go': GuessSyntax := 'go';
                     '.hs': GuessSyntax := 'haskell';
                     '.java': GuessSyntax := 'java';
@@ -827,6 +824,11 @@ begin
                     '.yml': GuessSyntax := 'yaml';
                     '.yaml': GuessSyntax := 'yaml';
                     '.sh': GuessSyntax := 'sh';
+                    '.f90': GuessSyntax := 'fortran';
+                    '.f95': GuessSyntax := 'fortran';
+                    '.f03': GuessSyntax := 'fortran';
+                    '.for': GuessSyntax := 'fortran';
+                    '.f': GuessSyntax := 'fortran';
                 else
                     GuessSyntax := 'text';
                 end;
