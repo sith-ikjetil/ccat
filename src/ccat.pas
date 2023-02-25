@@ -829,6 +829,7 @@ begin
                     '.f03': GuessSyntax := 'fortran';
                     '.for': GuessSyntax := 'fortran';
                     '.f': GuessSyntax := 'fortran';
+                    '.ff': GuessSyntax := 'fortran'
                 else
                     GuessSyntax := 'text';
                 end;
