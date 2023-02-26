@@ -787,6 +787,7 @@ begin
                     '.pas': GuessSyntax := 'pascal';
                     '.ino': GuessSyntax := 'arduino';
                     '.asm': GuessSyntax := 'asm';
+                    '.s' : GuessSyntax := 'asm';
                     '.awk': GuessSyntax := 'awk';
                     '.bat': GuessSyntax := 'batch';
                     '.cmd': GuessSyntax := 'batch';
