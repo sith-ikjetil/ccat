@@ -1,5 +1,5 @@
 # .asm files
-color magenta ";.*$"
+color brightgreen ";.*$"
 color green "\".*\""
 color cyan "\.(?i)(stack|model|data|subsection|text|bss|init|fini|code|startup|exit)"
 color brightblue "(?i)\b(end|proc|endp|equ|align|file|globl|global|hidden|section|size|type|weak|near|small|dw|db|ident)\b"
