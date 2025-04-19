@@ -112,7 +112,7 @@ begin
     writeln('Usage: ccat [option]');
     writeln('Version: ', g_version);
     writeln('Reads from a file/standard input');
-    writeln('<syntax> is a <syntax>.ccrc/<syntax>.nanorc file from ~/.ccat or ~/.nano');
+    writeln('<syntax> is a <syntax>.ccrc file from ~/.ccat');
     writeln();
     writeln('  --help               display this help screen and exit');
     writeln('  --syntax=<syntax>    render output using <syntax> syntax');
@@ -720,7 +720,7 @@ begin
     else
     begin
         // else check ~/.nano/<g_syntax>.nanorc
-        fname := getuserdir();
+        {fname := getuserdir();
         fname += '.nano/';
         fname += g_syntax;
         fname += '.nanorc';
@@ -740,6 +740,7 @@ begin
         
             LoadSyntaxNanoRc := true;
         end
+        }
     end;
 end;
 
