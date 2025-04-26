@@ -1,7 +1,7 @@
 //#: Title        : ccat.pas
 //#: Date Created : 2020-12-25
 //#: Author       : Kjetil Kristoffer Solberg <post@ikjetil.no>
-//#: Version      : 0.5
+//#: Version      : 0.7
 //#: Description  : Source code to ccat.
 program ccat;
 
@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '0.6';
+    g_version = '0.7';
 
     //
     // Colors
