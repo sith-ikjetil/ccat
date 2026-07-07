@@ -853,8 +853,7 @@ var
     ConfigDir : String;
 begin
     ConfigDir := IncludeTrailingPathDelimiter(GetEnvironmentVariable('HOME'));
-    ConfigDir := IncludeTrailingPathDelimiter(ConfigDir) + '.ccat';
-    WriteLn(ConfigDir);
+    ConfigDir := IncludeTrailingPathDelimiter(ConfigDir) + '.ccat';    
     Result := DirectoryExists(ConfigDir);
 end;
 
