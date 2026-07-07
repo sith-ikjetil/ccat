@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '0.7';
+    g_version = '0.8';
 
     //
     // Colors
@@ -844,9 +844,44 @@ begin
 end;
 
 //
+// Function: DoesHomeConfigDirectoryExists
+//
+// (i): Checks if home config directory exists. Returns true/false.
+//
+function DoesHomeConfigDirectoryExists: boolean;
+var
+    ConfigDir : String;
+begin
+    ConfigDir := IncludeTrailingPathDelimiter(GetEnvironmentVariable('HOME'));
+    ConfigDir := IncludeTrailingPathDelimiter(ConfigDir) + '.ccat';
+    WriteLn(ConfigDir);
+    Result := DirectoryExists(ConfigDir);
+end;
+
+//
+// Procedure: CopyConfigToHomeConfigDirectory
+//
+// (i): Copies config files to home config directory.
+//
+procedure CopyConfigToHomeConfigDirectory;
+var
+  HomeDir: String;
+begin  
+  HomeDir := GetEnvironmentVariable('HOME');
+
+  ExecuteProcess('/bin/cp',
+  ['-r', '/usr/share/ccat/.ccat', HomeDir + '/.ccat']);
+end;
+
+//
 // program block
 //
 begin
+    if (not DoesHomeConfigDirectoryExists()) then
+    begin
+        CopyConfigToHomeConfigDirectory();
+    end;
+
     if (paramcount = 0) then                   // No arguments show help screen
         RenderHelp()
     else if (paramcount = 1) and IsArgIn('--help') then         // One argument and is --help so show help screen
