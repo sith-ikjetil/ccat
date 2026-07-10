@@ -1,0 +1,10 @@
+# *.awk files
+# Comments
+color green "#.*$"
+# 
+color yellow "\"[^"]*\""
+color brightblue "(\bBEGIN\b|\bEND\b|\bif\b|\belse\b|\bwhile\b|\bdo\b|\bfor\b|\bin\b|\bbreak\b|\bcontinue\b|\bdelete\b|\bnext\b|\bnextfile\b|\bexit\b|\bfunction\b|\breturn\b|\bprint\b|\bprintf\b|\bgetline\b)"
+color yellow "'\\.'"
+color yellow "'.'"
+color brightmagenta "[0-9]+"
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}]+"
