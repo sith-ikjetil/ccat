@@ -35,8 +35,8 @@ type
     // A input line item
     //
     TLineItem = record
-        m_i: integer;   // index of item
-        m_len: integer; // length of item
+        m_i: int64;   // index of item
+        m_len: int64; // length of item
         m_pre: string;  // pre color string
         m_post: string; // post color string
     end;
@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '0.9';
+    g_version = '1.0';
 
     //
     // Colors
@@ -81,13 +81,13 @@ var
     // <syntax>.rc/<syntax>.nanorc color records
     //
     g_colorItems: array [1..10000000] of TColorItem;
-    g_ciIndex: integer = 1;
+    g_ciIndex: int64 = 1;
 
     //
     // line items for each input (each line of input)
     //
     g_lineItems: array [1..10000000] of TLineItem;
-    g_liIndex: integer = 1;
+    g_liIndex: int64 = 1;
 
     //
     // Misc
@@ -96,8 +96,8 @@ var
     g_filename: string = '';    // filename if file argument
     g_isInMlComment: Boolean = False; // is in multiline comment rendering
     g_mlColor: string = ''; // multiline color is in
-    g_mlStartIndex: integer = -1;
-    g_mlEndIndex: integer = -1;
+    g_mlStartIndex: int64 = -1;
+    g_mlEndIndex: int64 = -1;
     g_mlFound: Boolean = False;
     g_mlFoundInComment: Boolean = False;
     g_mlActive: TColorItem;
@@ -175,7 +175,7 @@ procedure PreRenderInput(input: string; ci: TColorItem);
 var
     re: TRegExpr;
     re2: TRegExpr;    
-    l: integer;
+    l: int64;
     temp: string;    
     temp_item: TLineItem;
     mlFlag: Boolean;
@@ -320,11 +320,11 @@ end;
 //
 // (i): Decline items to render in other items already rendered
 //
-function IsOkToPostRender(li: integer; i: integer; len: integer) : boolean;
+function IsOkToPostRender(li: int64; i: int64; len: int64) : boolean;
 var
-    j: integer;
-    sumPre : integer;
-    sumPost : integer;
+    j: int64;
+    sumPre : int64;
+    sumPost : int64;
 begin
     IsOkToPostRender := true;
     
@@ -333,7 +333,7 @@ begin
 	
     for j:= 1 to li do
 	begin
-		if ( j <> li) then
+		if (j <> li) then
 		begin
 			if (((i+sumPre+sumPost) <= (g_lineItems[j].m_i+sumPre+sumPost))
 				and
@@ -358,10 +358,10 @@ end;
 //
 // (i): Sorts the g_lineItems array by m_i
 //
-procedure SortLineItemsByIndex(var items: array of TLineItem; size: integer);
+procedure SortLineItemsByIndex(var items: array of TLineItem; size: int64);
 var
-    i: integer;
-    j: integer;
+    i: int64;
+    j: int64;
     index: TLineItem;
 begin
     for i := 1 to size-1 do
@@ -382,54 +382,142 @@ end;
 //
 // (i): Post renders line input
 //
-function PostRenderInput(input: string) : string;
+function PostRenderInput(const input: string): string;
 var
-    i: integer = 1;
-    j: integer;
-    max: integer;
-    temp: string;
-    left: string;
-    right: string;
-    s: string;
+    i: SizeInt;
+    max: SizeInt;
+
+    itemPos: SizeInt;
+    itemLen: SizeInt;
+    itemEnd: SizeInt;
+
+    sourcePos: SizeInt;
+    destinationPos: SizeInt;
+
+    lastAcceptedEnd: SizeInt;
+    outputLength: SizeInt;
+    copyLength: SizeInt;
+
+    renderItem: array of Boolean;
+
+    procedure CopyToResult(
+        const source: string;
+        sourceIndex: SizeInt;
+        count: SizeInt
+    );
+    begin
+        if count <= 0 then
+            Exit;
+
+        Move(
+            source[sourceIndex],
+            Result[destinationPos],
+            count * SizeOf(Char)
+        );
+
+        Inc(destinationPos, count);
+    end;
+
 begin
-    PostRenderInput := input;
     max := g_liIndex - 1;
 
-    temp := input;
+    if max <= 0 then
+    begin
+        Result := input;
+        g_liIndex := 1;
+        Exit;
+    end;
 
+    SetLength(renderItem, max + 1);
+
+    lastAcceptedEnd := 0;
+    outputLength := Length(input);
+
+    {
+      First pass:
+      select non-overlapping items and calculate the final output size.
+    }
     for i := 1 to max do
     begin
-        if IsOkToPostRender(i,g_lineItems[i].m_i, g_lineItems[i].m_len) then
+        itemPos := g_lineItems[i].m_i;
+        itemLen := g_lineItems[i].m_len;
+        itemEnd := itemPos + itemLen;
+
+        renderItem[i] := False;
+
+        if itemLen <= 0 then
+            Continue;
+
+        if itemPos < 1 then
+            Continue;
+
+        if itemEnd - 1 > Length(input) then
+            Continue;
+
+        if itemPos >= lastAcceptedEnd then
         begin
-            left := leftstr(temp,g_lineItems[i].m_i-1);
-            right := rightstr(temp,length(temp)-g_lineItems[i].m_i-g_lineItems[i].m_len+1);
-            
-            s := copy(temp, g_lineItems[i].m_i, g_lineItems[i].m_len);
+            renderItem[i] := True;
+            lastAcceptedEnd := itemEnd;
 
-            temp := left;
-            temp += g_lineItems[i].m_pre;
-            temp += s;
-            temp += g_lineItems[i].m_post;
-            temp += right;
-
-            // Now update array for items further away
-            for j := 1 to max do
-            begin
-                if (g_lineItems[j].m_i > g_lineItems[i].m_i) 
-                    and ((g_lineItems[j].m_i + g_lineItems[j].m_len) <= (g_lineItems[i].m_i+g_lineItems[i].m_len)) then
-                begin
-                    g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
-                end
-                else if ( g_lineItems[j].m_i > g_lineItems[i].m_i ) then
-                begin
-                    g_lineItems[j].m_i += length(g_lineItems[i].m_pre);
-                    g_lineItems[j].m_i += length(g_lineItems[i].m_post);
-                end;
-            end;
+            Inc(
+                outputLength,
+                Length(g_lineItems[i].m_pre) +
+                Length(g_lineItems[i].m_post)
+            );
         end;
-    end;        
+    end;
 
-    PostRenderInput := temp;
+    {
+      Allocate the complete output string once.
+    }
+    SetLength(Result, outputLength);
+
+    sourcePos := 1;
+    destinationPos := 1;
+
+    {
+      Second pass:
+      copy the original text and color sequences sequentially.
+    }
+    for i := 1 to max do
+    begin
+        if not renderItem[i] then
+            Continue;
+
+        itemPos := g_lineItems[i].m_i;
+        itemLen := g_lineItems[i].m_len;
+
+        { Copy text before the match. }
+        copyLength := itemPos - sourcePos;
+        CopyToResult(input, sourcePos, copyLength);
+
+        { Copy opening ANSI sequence. }
+        CopyToResult(
+            g_lineItems[i].m_pre,
+            1,
+            Length(g_lineItems[i].m_pre)
+        );
+
+        { Copy matched text. }
+        CopyToResult(input, itemPos, itemLen);
+
+        { Copy closing ANSI sequence. }
+        CopyToResult(
+            g_lineItems[i].m_post,
+            1,
+            Length(g_lineItems[i].m_post)
+        );
+
+        sourcePos := itemPos + itemLen;
+    end;
+
+    { Copy everything after the final match. }
+    CopyToResult(
+        input,
+        sourcePos,
+        Length(input) - sourcePos + 1
+    );
+
     g_liIndex := 1;
 end;
 
@@ -441,8 +529,8 @@ end;
 procedure RenderColored();
 var
     input: string;
-    i: integer = 1;
-    max: integer;
+    i: int64 = 1;
+    max: int64;
     temp: string;
     f: text;
 begin
@@ -531,7 +619,7 @@ end;
 //
 function IsArgIn(arg: string): boolean;
 var
-    i: integer = 1;
+    i: int64 = 1;
 begin
     IsArgIn := false;
 
@@ -552,7 +640,7 @@ end;
 //
 function GetArgIn(arg: string): string;
 var
-    i: integer = 1;
+    i: int64 = 1;
 begin
     GetArgIn := '';
 
@@ -733,7 +821,7 @@ end;
 //
 function GetArgFileName() : string;
 var
-    i: integer;
+    i: int64;
 begin
     GetArgFileName := '';
 
