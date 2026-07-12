@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '0.8';
+    g_version = '0.9';
 
     //
     // Colors
@@ -80,13 +80,13 @@ var
     //
     // <syntax>.rc/<syntax>.nanorc color records
     //
-    g_colorItems: array [1..100000] of TColorItem;
+    g_colorItems: array [1..10000000] of TColorItem;
     g_ciIndex: integer = 1;
 
     //
     // line items for each input (each line of input)
     //
-    g_lineItems: array [1..100000] of TLineItem;
+    g_lineItems: array [1..10000000] of TLineItem;
     g_liIndex: integer = 1;
 
     //
@@ -174,11 +174,9 @@ end;
 procedure PreRenderInput(input: string; ci: TColorItem);
 var
     re: TRegExpr;
-    re2: TRegExpr;
-    i: integer;
+    re2: TRegExpr;    
     l: integer;
-    temp: string;
-    right: string;
+    temp: string;    
     temp_item: TLineItem;
     mlFlag: Boolean;
 begin
@@ -186,126 +184,135 @@ begin
     mlFlag := False;
     l := 0;
 
-    try
-        try 
-            if not g_isInMlComment and ci.m_isMlComment then
+    try        
+        if not g_isInMlComment and ci.m_isMlComment then
+        begin
+            re2 := TRegExpr.Create(ci.m_ml.m_startTag);
+            try
+            if re2.Exec(temp) then
             begin
-                re2 := TRegExpr.Create(ci.m_ml.m_startTag);
-                if re2.Exec(temp) then
-                begin
-                    g_mlActive := ci;
-                    g_mlFound := true;
-                    mlFlag := true;
-                    temp_item.m_i := pos(re2.Match[0],temp);
-                    temp_item.m_len := length(re2.Match[0]);
-                    temp_item.m_pre := ci.m_ml.m_color;
-                    temp_item.m_post := '';
+                g_mlActive := ci;
+                g_mlFound := true;
+                mlFlag := true;
+                temp_item.m_i := re2.MatchPos[0];//pos(re.Match[0],temp);
+                temp_item.m_len := re2.MatchLen[0];//length(re2.Match[0])                
+                temp_item.m_pre := ci.m_ml.m_color;
+                temp_item.m_post := '';
 
-                    g_mlColor := ci.m_ml.m_color;
-                    g_mlStartIndex := temp_item.m_i;
+                g_mlColor := ci.m_ml.m_color;
+                g_mlStartIndex := temp_item.m_i;
 
-                    g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;
+                g_lineItems[g_liIndex] := temp_item;
+                g_liIndex += 1;
 
-                    g_isInMlComment := True;    
+                g_isInMlComment := True;    
 
-                    l := length(re2.Match[0]);
-
-                    re2 := TRegExpr.Create(ci.m_ml.m_endTag);
-                    if re2.Exec(temp) then
-                    begin
-                        l += temp_item.m_i;
-                        if (pos(re2.Match[0],temp) >= l) then
-                        begin
-                            temp_item.m_i := pos(re2.Match[0],temp);
-                            temp_item.m_len := length(re2.Match[0]);
-                            temp_item.m_pre := ci.m_ml.m_color;
-                            temp_item.m_post := g_clr_reset;
-
-                            g_mlEndIndex := temp_item.m_i + temp_item.m_len;
-                            
-                            g_lineItems[g_liIndex] := temp_item;
-                            g_liIndex += 1;
-
-                            g_isInMlComment := False;
-                            g_mlFound := True;
-                        end;        
-                    end
-                end;
+                l := length(re2.Match[0]);
             end;
-
-            if g_isInMlComment and ci.m_isMlComment and not mlFlag and (ci.m_ml.m_startTag = g_mlActive.m_ml.m_startTag) then
-            begin
+            finally
+                re2.Free;
+            end;            
+        
+            if (l > 0) then
+            begin            
                 re2 := TRegExpr.Create(ci.m_ml.m_endTag);
+                try
                 if re2.Exec(temp) then
                 begin
-                    temp_item.m_i := 1;
-                    temp_item.m_len := pos(re2.Match[0],temp) + length(re2.Match[0]) - 1;
-                    temp_item.m_pre := g_mlColor;
-                    temp_item.m_post := g_clr_reset;
+                    l += temp_item.m_i;
+                    if (pos(re2.Match[0],temp) >= l) then
+                    begin
+                        temp_item.m_i := re2.MatchPos[0];//pos(re.Match[0],temp);
+                        temp_item.m_len := re2.MatchLen[0];//length(re2.Match[0])                
+                        temp_item.m_pre := ci.m_ml.m_color;
+                        temp_item.m_post := g_clr_reset;
 
-                    g_mlEndIndex := temp_item.m_i + temp_item.m_len + length(re2.Match[0]) - 1;
-                    g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;
+                        g_mlEndIndex := temp_item.m_i + temp_item.m_len;
+                        
+                        g_lineItems[g_liIndex] := temp_item;
+                        g_liIndex += 1;
 
-                    g_isInMlComment := False;
-                    g_mlFound := False;
-                    g_mlStartIndex := -1;
-                end
-                else
-                begin
-                    temp_item.m_i := 1;
-                    temp_item.m_len := length(temp) + 1;
-                    temp_item.m_pre := g_mlColor;
-                    temp_item.m_post := g_clr_reset;
-
-                    g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;
-
-                    g_mlFoundInComment := True;
+                        g_isInMlComment := False;
+                        g_mlFound := True;
+                    end;        
+                end;            
+                finally
+                    re2.Free;            
                 end;
             end;
+        end;
 
-            if ci.m_isMlComment or g_mlFoundInComment or g_isInMlComment then
+        if g_isInMlComment and ci.m_isMlComment and not mlFlag and (ci.m_ml.m_startTag = g_mlActive.m_ml.m_startTag) then
+        begin
+            re2 := TRegExpr.Create(ci.m_ml.m_endTag);
+            try
+            if re2.Exec(temp) then
             begin
-                Exit();
-            end;
-
-            re := TRegExpr.Create(ci.m_re);
-            if re.Exec(temp) then
-            begin
-                temp_item.m_i := pos(re.Match[0],temp);
-                temp_item.m_len := length(re.Match[0]);
-                temp_item.m_pre := ci.m_color;
+                temp_item.m_i := 1;
+                temp_item.m_len := re2.MatchPos[0] + re2.MatchLen[0];//pos(re2.Match[0],temp) + length(re2.Match[0]) - 1;
+                temp_item.m_pre := g_mlColor;
                 temp_item.m_post := g_clr_reset;
 
-                if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
-                begin
-                    g_lineItems[g_liIndex] := temp_item;
-                    g_liIndex += 1;        
-                end;
+                g_mlEndIndex := temp_item.m_i + temp_item.m_len + length(re2.Match[0]) - 1;
+                g_lineItems[g_liIndex] := temp_item;
+                g_liIndex += 1;
 
-                while re.ExecNext do
-                begin
-                    right := rightstr(temp,length(temp)-temp_item.m_i-temp_item.m_len+1);
-                    i := pos(re.Match[0], right);
-                    temp_item.m_i := i + length(input) - length(right);
-                    temp_item.m_len := length(re.Match[0]);
+                g_isInMlComment := False;
+                g_mlFound := False;
+                g_mlStartIndex := -1;
+            end
+            else
+            begin
+                temp_item.m_i := 1;
+                temp_item.m_len := length(temp) + 1;
+                temp_item.m_pre := g_mlColor;
+                temp_item.m_post := g_clr_reset;
+
+                g_lineItems[g_liIndex] := temp_item;
+                g_liIndex += 1;
+
+                g_mlFoundInComment := True;
+            end;
+            finally
+                re2.Free;
+            end;
+        end;
+
+        if ci.m_isMlComment or g_mlFoundInComment or g_isInMlComment then
+        begin
+            Exit();
+        end;
+
+        re := TRegExpr.Create(ci.m_re);
+        try
+            if re.Exec(temp) then
+            begin
+                repeat
+                    temp_item.m_i := re.MatchPos[0];//pos(re.Match[0],temp);
+                    temp_item.m_len := re.MatchLen[0];//length(re.Match[0])                                    
                     temp_item.m_pre := ci.m_color;
                     temp_item.m_post := g_clr_reset;
 
-                    if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex))) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex)) then
-                    begin 
+                    if ((not g_mlFound and (temp_item.m_i > g_mlEndIndex)) OR (g_mlFound and (temp_item.m_i < g_mlStartIndex)) OR (g_mlFound and ((temp_item.m_i) > g_mlEndIndex))) then
+                    begin
                         g_lineItems[g_liIndex] := temp_item;
                         g_liIndex += 1;        
-                    end;  
-                end;
+                    end;
+
+                    { A zero-length match can prevent forward progress. }
+                    if re.MatchLen[0] = 0 then
+                    begin
+                        //WriteLn('Regex produced an empty match: ', ci.m_re, ' at position ', re.MatchPos[0]);
+                        Break;
+                    end;                    
+                until not re.ExecNext;
             end;
-        except
-        end;
+        finally
+            re.Free;
+        end;        
     finally
         
-    end;
+    end;    
 end;
 
 //
@@ -453,33 +460,33 @@ begin
         begin
             temp := input;
             for i := 1 to max do
-            begin
-                PreRenderInput(temp, g_colorItems[i]);
+            begin                               
+                PreRenderInput(temp, g_colorItems[i]);                
             end;
             g_mlStartIndex := -1;
             g_mlEndIndex := -1;
             g_mlFoundInComment := False;
             //g_mlFound := False;
-            SortLineItemsByIndex(g_lineItems,g_liIndex-1);
-            temp := PostRenderInput(temp);    
+            SortLineItemsByIndex(g_lineItems,g_liIndex-1);            
+            temp := PostRenderInput(temp);                
             writeln(temp);
-            readln(f,input);
+            readln(f,input);            
         end;
 
         close(f);
-
+        
         temp := input;
         for i := 1 to max do
-        begin
-            PreRenderInput(temp, g_colorItems[i]);
+        begin                        
+            PreRenderInput(temp, g_colorItems[i]);                        
         end;
         g_mlStartIndex := -1;
         g_mlEndIndex := -1;
         g_mlFoundInComment := False;
-        //g_mlFound := False;
-        SortLineItemsByIndex(g_lineItems,g_liIndex-1);
-        temp := PostRenderInput(temp);
-        writeln(temp);
+        //g_mlFound := False;                    
+        SortLineItemsByIndex(g_lineItems,g_liIndex-1);                                
+        temp := PostRenderInput(temp);                        
+        writeln(temp);                
     end
     else
     begin
@@ -689,13 +696,13 @@ end;
 // (i): Loads syntax information from 1) ~/.ccat/<syntax>.ccrc, then 
 //      if not found 2) ~/.nano/<syntax>.nanorc
 //
-function LoadSyntaxNanoRc() : boolean;
+function LoadSyntaxRc() : boolean;
 var
     fname: string;
     fnrc: textfile;
     line: string;
 begin
-    LoadSyntaxNanoRc := false;
+    LoadSyntaxRc := false;
 
     // First check ~/.ccat/<g_syntax>.rc
     fname := getuserdir();
@@ -715,33 +722,8 @@ begin
 
         close(fnrc);
 
-        LoadSyntaxNanoRc := true;
+        LoadSyntaxRc := true;
     end    
-    else
-    begin
-        // else check ~/.nano/<g_syntax>.nanorc
-        {fname := getuserdir();
-        fname += '.nano/';
-        fname += g_syntax;
-        fname += '.nanorc';
-    
-        if fileexists(fname) then
-        begin
-            assign(fnrc, fname);
-            reset(fnrc);
-        
-            while not eof(fnrc) do
-            begin
-                readln(fnrc, line);
-                AddItemToColorArray(line);
-            end;
-       
-            close(fnrc);
-        
-            LoadSyntaxNanoRc := true;
-        end
-        }
-    end;
 end;
 
 //
@@ -890,7 +872,7 @@ begin
     else if (paramcount = 1) and IsArgIn('--syntax') then       // One argument is syntax and assume input from stdin
     begin
         g_syntax := GetArgIn('--syntax');       // Get syntax
-        if LoadSyntaxNanoRc()                   // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
+        if LoadSyntaxRc()                   // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
         then RenderColored()                    // Render colored all looks good
         else RenderRaw();                       // Render raw
     end
@@ -907,7 +889,7 @@ begin
         g_syntax := GuessSyntax(g_filename);    // Guess syntax
         if length(g_syntax) > 0 then 
         begin
-            if LoadSyntaxNanoRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
+            if LoadSyntaxRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
             then RenderColored()                // Render colored all looks good
             else RenderRaw();                   // Render raw
         end
@@ -925,7 +907,7 @@ begin
         end
         else
         begin
-            if LoadSyntaxNanoRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
+            if LoadSyntaxRc()               // Load <syntax>.ccrc/<syntax>.nanorc and check if ok
             then RenderColored()                // Render colored all looks good
             else RenderRaw();                   // Render raw
         end;
