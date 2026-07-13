@@ -3,9 +3,9 @@ License: **GPL-3.0-or-later**
 
 Color Linux cat type command.  
 
-Uses ccrc/nanorc files for coloring information.  
+Uses ccrc files for coloring information.  
 
-Expects 1) ccrc files to be found under ~/.ccat/  
+Expects ccrc files to be found under ~/.ccat/  
 
 **Compiles with free pascal compiler.**  
 
