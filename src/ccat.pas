@@ -943,13 +943,27 @@ begin
 end;
 
 //
+// Procedure: CopyNewerConfigToHomeConfigDirectory
+//
+// (i): Copies newer config (from newer app install) to user home ,ccat directory.
+//
+procedure CopyNewerConfigToHomeConfigDirectory;
+var
+  HomeDir: String;
+begin  
+  HomeDir := GetEnvironmentVariable('HOME');
+
+  ExecuteProcess('/bin/cp',
+  ['-r', '--update=none', '/usr/share/ccat/.ccat/.', HomeDir + '/.ccat']);  
+end;
+
+//
 // program block
 //
 begin
-    if (not DoesHomeConfigDirectoryExists()) then
-    begin
-        CopyConfigToHomeConfigDirectory();
-    end;
+    if not DoesHomeConfigDirectoryExists() // If no home config directory
+    then CopyConfigToHomeConfigDirectory() // Copy ccat resource files from machine wide to user home
+    else CopyNewerConfigToHomeConfigDirectory(); // Copy newer files to user home
 
     if (paramcount = 0) then                   // No arguments show help screen
         RenderHelp()
