@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '1.0';
+    g_version = '1.1';
 
     //
     // Colors
