@@ -45,7 +45,7 @@ const
     //
     // Version string
     //
-    g_version = '1.1';
+    g_version = '1.2';
 
     //
     // Colors
@@ -779,42 +779,6 @@ begin
 end;
 
 //
-// LoadSyntaxNanoRc
-//
-// (i): Loads syntax information from 1) ~/.ccat/<syntax>.ccrc, then 
-//      if not found 2) ~/.nano/<syntax>.nanorc
-//
-function LoadSyntaxRc() : boolean;
-var
-    fname: string;
-    fnrc: textfile;
-    line: string;
-begin
-    LoadSyntaxRc := false;
-
-    // First check ~/.ccat/<g_syntax>.rc
-    fname := getuserdir();
-    fname += '.ccat/';
-    fname += g_syntax;
-    fname += '.ccrc';
-    if fileexists(fname) then
-    begin
-        assign(fnrc, fname);
-        reset(fnrc);
-
-        while not eof(fnrc) do
-        begin
-            readln(fnrc, line);
-            AddItemToColorArray(line);
-        end;
-
-        close(fnrc);
-
-        LoadSyntaxRc := true;
-    end    
-end;
-
-//
 // GetArgFileName
 //
 // (i): First argument not known is estimated to be filename
@@ -916,57 +880,74 @@ begin
 end;
 
 //
-// Function: DoesHomeConfigDirectoryExists
+// Function: DoesFileExists
 //
 // (i): Checks if home config directory exists. Returns true/false.
 //
-function DoesHomeConfigDirectoryExists: boolean;
+function DoesCcrcFileExistsInHomeConfigDirectory(filename: string): boolean;
 var
     ConfigDir : String;
 begin
     ConfigDir := IncludeTrailingPathDelimiter(GetEnvironmentVariable('HOME'));
     ConfigDir := IncludeTrailingPathDelimiter(ConfigDir) + '.ccat';    
-    Result := DirectoryExists(ConfigDir);
+    ConfigDir := IncludeTrailingPathDelimiter(ConfigDir) + filename;    
+    Result := FileExists(ConfigDir);
 end;
 
 //
-// Procedure: CopyConfigToHomeConfigDirectory
+// Function: DoesFileExists
 //
-// (i): Copies config files to home config directory.
+// (i): Checks if home config directory exists. Returns true/false.
 //
-procedure CopyConfigToHomeConfigDirectory;
-var
-  HomeDir: String;
-begin  
-  HomeDir := GetEnvironmentVariable('HOME');
-
-  ExecuteProcess('/bin/cp',
-  ['-r', '/usr/share/ccat/.ccat', HomeDir + '/.ccat']);
+function DoesCcrcFileExistsInUsrShareDirectory(filename: string): boolean;
+begin
+    Result := FileExists('/usr/share/ccat/.ccat/' + filename);        
 end;
 
 //
-// Procedure: CopyNewerConfigToHomeConfigDirectory
+// LoadSyntaxNanoRc
 //
-// (i): Copies newer config (from newer app install) to user home ,ccat directory.
+// (i): Loads syntax information from 1) ~/.ccat/<syntax>.ccrc, then 
+//      if not found 2) ~/.nano/<syntax>.nanorc
 //
-procedure CopyNewerConfigToHomeConfigDirectory;
+function LoadSyntaxRc() : boolean;
 var
-  HomeDir: String;
-begin  
-  HomeDir := GetEnvironmentVariable('HOME');
+    fname: string;
+    fnrc: textfile;
+    line: string;
+begin
+    LoadSyntaxRc := false;
+    
+    fname := g_syntax;
+    fname += '.ccrc';
+    if DoesCcrcFileExistsInHomeConfigDirectory(fname) then 
+    begin
+        fname := IncludeTrailingPathDelimiter(getuserdir()) + fname;
+    end
+    else if DoesCcrcFileExistsInUsrShareDirectory(fname) then
+    begin
+        fname := '/usr/share/ccat/.ccat/' + fname;    
+    end
+    else Exit();
+    
+    assign(fnrc, fname);
+    reset(fnrc);
 
-  ExecuteProcess('/bin/cp',
-  ['-r', '-u', '/usr/share/ccat/.ccat/.', HomeDir + '/.ccat']);  
+    while not eof(fnrc) do
+    begin
+        readln(fnrc, line);
+        AddItemToColorArray(line);
+    end;
+
+    close(fnrc);
+
+    LoadSyntaxRc := true;    
 end;
 
 //
 // program block
 //
-begin
-    if not DoesHomeConfigDirectoryExists() // If no home config directory
-    then CopyConfigToHomeConfigDirectory() // Copy ccat resource files from machine wide to user home
-    else CopyNewerConfigToHomeConfigDirectory(); // Copy newer files to user home
-
+begin    
     if (paramcount = 0) then                   // No arguments show help screen
         RenderHelp()
     else if (paramcount = 1) and IsArgIn('--help') then         // One argument and is --help so show help screen
