@@ -922,13 +922,13 @@ begin
     fname += '.ccrc';
     if DoesCcrcFileExistsInHomeConfigDirectory(fname) then 
     begin
-        fname := IncludeTrailingPathDelimiter(getuserdir()) + fname;
+        fname := getuserdir() + '.ccat/' + fname;
     end
     else if DoesCcrcFileExistsInUsrShareDirectory(fname) then
     begin
         fname := '/usr/share/ccat/.ccat/' + fname;    
     end
-    else Exit();
+    else exit;
     
     assign(fnrc, fname);
     reset(fnrc);
