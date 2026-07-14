@@ -896,6 +896,8 @@ begin
                     '.yml': GuessSyntax := 'yaml';
                     '.yaml': GuessSyntax := 'yaml';
                     '.sh': GuessSyntax := 'sh';
+                    '.html': GuessSyntax := 'html';
+                    '.htm': GuessSyntax := 'html';
                     '.f90': GuessSyntax := 'fortran';
                     '.f95': GuessSyntax := 'fortran';
                     '.f03': GuessSyntax := 'fortran';
@@ -954,7 +956,7 @@ begin
   HomeDir := GetEnvironmentVariable('HOME');
 
   ExecuteProcess('/bin/cp',
-  ['-r', '--update=none', '/usr/share/ccat/.ccat/.', HomeDir + '/.ccat']);  
+  ['-r', '-u', '/usr/share/ccat/.ccat/.', HomeDir + '/.ccat']);  
 end;
 
 //

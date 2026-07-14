@@ -1,0 +1,43 @@
+# .xml files
+color green start="<!DOCTYPE" end="[/]?>"
+color green start="<!--" end="-->"
+color cyan "<\?[0-9A-Za-z ]*\?>"
+color cyan "<\?"
+color cyan "\?>"
+color brightred      "[ ]{1}[\w:-]+="
+color green          "\"[^"]*\"|\'[^']*\'"
+color brightmagenta  "&\w+;"
+color yellow "<[\w:-]*/>"
+color yellow "</[\w:-]*>"
+color yellow "<[\w:-]*>"
+color yellow "<[\w:-]*\b"
+color yellow "/>"
+color yellow ">"
+
+## Comments
+color green "//.*$"
+color green start="\/\*" end="\*\/"
+
+## String
+color yellow "\"[^"]*\""
+color yellow "'[^']*'"
+
+## 
+# color brightmagenta "\<[-+]?([1-9][0-9]*|0[0-7]*|0x[0-9a-fA-F]+)([uU][lL]?|[lL][uU]?)?\>"
+# color brightmagenta "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[fFlL]?"
+# color brightmagenta "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
+
+## Keywords
+color brightblue "\<(true|false|break|case|catch|continue|default|delete|do|else|finally)\>"
+color brightblue "\<(for|function|if|in|instanceof|new|null|return|switch)\>"
+color brightblue "\<(switch|this|throw|try|typeof|undefined|var|void|while|with)\>"
+color brightblue "\<(import|as|from|export)\>"
+color brightblue "\<(const|let|class|extends|of|get|set|await|async|yield)\>"
+
+## Type specifiers
+color brightgreen "\<(Array|Boolean|Date|Image|Enumerator|Error|Function|Math|window|document)\>"
+color brightgreen "\<(WeakMap|Map|WeakSet|Set|Symbol|Promise)\>"
+color brightgreen "\<(Number|Object|RegExp|String)\>"
+
+## Operators
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\{\}]+"
