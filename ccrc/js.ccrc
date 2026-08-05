@@ -13,11 +13,12 @@ color brightmagenta "\<[-+]?([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([EePp][+-]?[0-9]+)?[
 color brightmagenta "\<[-+]?([0-9]+[EePp][+-]?[0-9]+)[fFlL]?"
 
 ## Keywords
-color brightblue "\<(true|false|break|case|catch|continue|default|delete|do|else|finally)\>"
+color brightblue "\<(true|false|break|case|catch|continue|default|delete|do|else|finally|then)\>"
 color brightblue "\<(for|function|if|in|instanceof|new|null|return|switch)\>"
 color brightblue "\<(switch|this|throw|try|typeof|undefined|var|void|while|with)\>"
 color brightblue "\<(import|as|from|export)\>"
 color brightblue "\<(const|let|class|extends|of|get|set|await|async|yield)\>"
+color brightred "\<(alert|fetch|console)\>"
 
 ## Type specifiers
 color brightgreen "\<(Array|Boolean|Date|Image|Enumerator|Error|Function|Math|window|document)\>"
