@@ -1,0 +1,19 @@
+# *.cs
+# Comments
+#color green "//.*$"
+color green start="\/\*" end="\*\/"
+
+# String
+color brightgreen "\"[^"]*\""
+color brightgreen "[@$]"
+
+# 
+color yellow "^[ ]*#[-\w .,:]+\b"
+color yellow "^[ ]*\.[-\w .,:]+\b"
+color brightblue  "^[ ]*[\w-]+[:]"
+color brightyellow  "[-+/*=<>?:!~%&|]"
+color brightcyan    "\<([0-9_.]+[px%em]|0x[A-Fa-f0-9_]+|0b[0-1_]+)[FL]?\>"
+color magenta       "\\([btnfr]|'|\"|\\)"
+color magenta       "\\u[A-Fa-f0-9]{4}"
+color brightyellow  "[;\&\=\(\)\[\]\+\-\?:\,\>\<\{\}]+"
+color yellow "^[ ]*[-\w .,:]+\b"
