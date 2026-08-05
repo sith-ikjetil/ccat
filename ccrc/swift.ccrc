@@ -9,12 +9,12 @@ color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}]+"
 color brightyellow "[!]"
 
 # Statements
-color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws)\>"
+color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws|catch|try)\>"
 color brightblue  "\<(lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard)\>"
 color brightblue  "\<(protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
 
 # Keywords
-color cyan "\<(print)\>"
+color cyan "\<(print|exit|system)\>"
 color brightmagenta "\<(init)\>"
 
 # Attribute
