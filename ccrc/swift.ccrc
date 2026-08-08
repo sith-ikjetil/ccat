@@ -9,6 +9,10 @@ color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}]+"
 color brightyellow "[!]"
 
 # Statements
+color brightblue  "\#if"
+color brightblue  "\#elseif"
+color brightblue  "\#else"
+color brightblue  "\#endif"
 color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws|catch|try)\>"
 color brightblue  "\<(lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard)\>"
 color brightblue  "\<(protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
@@ -46,7 +50,7 @@ color brightgreen "\<(UnicodeScalarType|IntMax|UIntMax|Void|Any|Comparable|Equat
 color cyan "\<(Foundation|Glibc|Darwin|XCTest)\>"
 
 # Text
-color red ""[^"]*""
+color yellow ""[^"]*""
 
 # Variable in Text
 color white start="\\\(" end="\)"
