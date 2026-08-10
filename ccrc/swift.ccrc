@@ -13,9 +13,16 @@ color brightblue  "\#if"
 color brightblue  "\#elseif"
 color brightblue  "\#else"
 color brightblue  "\#endif"
-color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws|catch|try)\>"
-color brightblue  "\<(lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard)\>"
-color brightblue  "\<(protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
+color brightred   "\@main"
+color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws|catch|try|do|while|defer)\>"
+color brightblue  "\<(where|async|lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard|final|infix)\>"
+color brightblue  "\<(rethrows|await|protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
+
+# Standard Types
+color brightblue "\<(true|false|nil)\>"
+color brightblue "\<(Any|UInt|Int|Double|String|Float|Bool|Dictionary|Array|Character|Range|Set|Bit|RawByte|Slice)\>"
+color brightblue "\<(UnicodeScalar|UnsafePointer|UnsafeMutablePointer)\>"
+color brightgreen "\<(AnyObject)\>"
 
 # Keywords
 color cyan "\<(print|exit|system)\>"
@@ -34,13 +41,6 @@ color brightmagenta "\<(0b+[0-1]+)\>"
 color brightmagenta "\<(0o+[0-7]+)\>"
 # Hexadecimal Literal "0x"
 color brightmagenta "\<(0x+[0-9A-Fa-f]+)\>"
-
-# Standard Types
-color brightblue "\<((U)?Int(8|16|32|64))\>"
-color brightblue "\<(true|false|nil)\>"
-color brightBlue "\<(UInt|Int|Double|String|Float|Bool|Dictionary|Array|Character|Range|Set|Bit|RawByte|Slice)\>"
-color brightblue "\<(UnicodeScalar|UnsafePointer|UnsafeMutablePointer)\>"
-color brightgreen "\<(AnyObject)\>"
 
 # Standard Type Aliases and Protocols
 color brightgreen "\<(AnyObject|AnyClass|GeneratorType|AnyGenerator|Element|Optional|Mirror)\>"
