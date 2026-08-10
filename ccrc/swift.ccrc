@@ -16,7 +16,7 @@ color brightblue  "\#endif"
 color brightred   "\@main"
 color brightblue  "\<(class|import|let|var|struct|enum|func|if|else|switch|case|default|for|in|static|private|public|throws|catch|try|do|while|defer)\>"
 color brightblue  "\<(where|async|lazy|get|set|self|willSet|didSet|override|super|convenience|weak|strong|mutating|return|guard|final|infix)\>"
-color brightblue  "\<(rethrows|await|protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned)\>"
+color brightblue  "\<(rethrows|await|protocol|typealias|prefix|postfix|operator|extension|internal|external|unowned|repeat)\>"
 
 # Standard Types
 color brightblue "\<(true|false|nil)\>"
@@ -31,7 +31,7 @@ color brightmagenta "\<(init)\>"
 # Attribute
 color red "(@+[a-zA-Z]+)"
 
-# Numbers / Decimal Literal 
+# Numbers / Decimal Literal
 color brightmagenta "\<([0-9]+)\>"
 # Unicode Literal "U+"
 color brightmagenta "\<(U\++[0-9A-Z]+)\>"
