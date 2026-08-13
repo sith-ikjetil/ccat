@@ -31,7 +31,7 @@ icolor brightblue "(?i)\.\<(import|indices|mode|nullvalue|output|prompt|quit|rea
 icolor brightblue "(?i)\.\<(schema|separator|show|tables|timeout|width)\>"
 color brightcyan  "\<(ON|OFF)\>"
 
-color blue   "\<([0-9]+)\>"
-color yellow ""(\\.|[^"])*"|'(\\.|[^'])*'"
-color yellow   "`(\\.|[^\\`])*`"
-
+color brightred   "\<([0-9]+)\>"
+color brightgreen ""(\\.|[^"])*"|'(\\.|[^'])*'"
+color brightgreen   "`(\\.|[^\\`])*`"
+color brightyellow "[\=\(\)\;\,\.\-]+"
