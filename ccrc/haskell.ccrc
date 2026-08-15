@@ -1,0 +1,44 @@
+# .hs files
+
+# Comments
+color green "--.*$"
+color green start="\{-" end="-\}"
+
+# Text Strings
+color brightgreen "\"[^\"]*\""
+
+# Character literals
+color brightgreen "'([^'\\]|\\.)'"
+
+# Reserved Keywords - Haskell 2010
+color brightblue "(\bcase\b|\bclass\b|\bdata\b|\bdefault\b|\bderiving\b|\bdo\b|\belse\b|\bforeign\b|\bif\b|\bimport\b|\bin\b|\binfix\b|\binfixl\b|\binfixr\b|\binstance\b|\blet\b|\bmodule\b|\bnewtype\b|\bof\b|\bthen\b|\btype\b|\bwhere\b)"
+
+# Import / module keywords
+color brightblue "(\bas\b|\bhiding\b|\bqualified\b)"
+
+# Common GHC extension keywords
+color brightblue "(\bforall\b|\bmdo\b|\bfamily\b|\brole\b|\bpattern\b|\bstatic\b|\bgroup\b|\bby\b|\busing\b|\bproc\b|\brec\b)"
+
+# Common Types
+color brightblue "(\bBool\b|\bChar\b|\bDouble\b|\bEither\b|\bFloat\b|\bIO\b|\bInt\b|\bInteger\b|\bMaybe\b|\bOrdering\b|\bString\b|\bWord\b)"
+
+# Common Constructors / Constants
+color brightred "(\bTrue\b|\bFalse\b|\bJust\b|\bNothing\b|\bLeft\b|\bRight\b|\bLT\b|\bEQ\b|\bGT\b)"
+
+# Common Prelude Functions
+color brightred "(\babs\b|\ball\b|\band\b|\bany\b|\bappendFile\b|\bconcat\b|\bconcatMap\b|\bconst\b|\bcos\b|\bdiv\b|\bdrop\b|\belem\b|\berror\b|\beven\b|\bexp\b|\bfilter\b|\bflip\b|\bfloor\b|\bfmap\b|\bfoldl\b|\bfoldr\b|\bfst\b|\bgcd\b|\bhead\b|\bid\b|\binit\b|\blast\b|\blength\b|\blines\b|\blog\b|\blookup\b|\bmap\b|\bmax\b|\bmaximum\b|\bmin\b|\bminimum\b|\bmod\b|\bnot\b|\bnull\b|\bodd\b|\bor\b|\botherwise\b|\bprint\b|\bproduct\b|\bputChar\b|\bputStr\b|\bputStrLn\b|\bread\b|\breadFile\b|\brepeat\b|\breplicate\b|\breverse\b|\bround\b|\bsin\b|\bsnd\b|\bsqrt\b|\bsum\b|\btail\b|\btake\b|\btan\b|\btruncate\b|\bunlines\b|\bunwords\b|\bwords\b|\bwriteFile\b|\bzip\b|\bzipWith\b)"
+
+# Numbers - hexadecimal
+color brightmagenta "\b0[xX][0-9a-fA-F]+\b"
+
+# Numbers - octal
+color brightmagenta "\b0[oO][0-7]+\b"
+
+# Numbers - decimal / floating point / exponent
+color brightmagenta "\b[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?\b"
+
+# Operators
+color brightyellow "(\-\>|\<\-|\=\>|\:\:|\.\.|\=\=|\/\=|\<\=|\>\=|\&\&|\|\||\+\+|\^\^|\*\*|\$!|>>=|>>|=<<|[!#$%&*+./<=>?@\\^|~:-]+)"
+
+# Delimiters / punctuation
+color brightyellow "[,\;\(\)\[\]\{\}`]+"
