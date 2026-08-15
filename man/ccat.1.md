@@ -21,14 +21,36 @@ Coloring stdin or [*FILE*] using ~/.nano/(syntax).nanorc syntax file
 : Renders stdin or [*FILE*] to stdout coloring using ~/.nano/(syntax).nanorc file
 
 # EXAMPLES
-**ccat ----syntax=pascal** f  
-: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
+**ccat** f
 
-**ccat ----syntax=pascal** < f  
-: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
+**ccat ----syntax=pascal** f
+: Coloring file f using pascal syntax.
+
+**ccat ----syntax=pascal** < f
+: Coloring file f using pascal syntax.
 
 cat f | **ccat ----syntax=pascal**  
-: Coloring file f using pascal syntax (~/.nano/pascal.nanorc)
+: Coloring file f using pascal syntax.
+
+# KNOWN FILE TYPES
+Assembly   **.asm**  
+Arduino    **.ino**  
+Awk        **.awk**  
+C/C++      **.c|.cpp|.h**  
+CSharp     **.cs**  
+Fortran    **.f90|.f95|.f03**  
+Haskell    **.hs**  
+HTML       **.html**  
+Javascript **.js**  
+JSON       **.json**  
+Pascal     **.pas**  
+Perl       **.pl**  
+Python     **.py**  
+Shell      **.sh**  
+SQL        **.sql**  
+Swift      **.swfit**  
+Text **.txt**  
+XML **.xml**  
 
 # BUGS
 All software have bugs :)
