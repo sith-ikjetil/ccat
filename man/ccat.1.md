@@ -3,7 +3,7 @@
 % December 2020
 
 # NAME
-ccat - coloring stdin or file to stdout using nanorc coloring
+ccat - coloring stdin or file to stdout using ccrc coloring
 
 # SYNOPSIS
 **ccat** [*OPTION*] [*FILE*]  
