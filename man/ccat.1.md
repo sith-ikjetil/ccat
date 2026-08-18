@@ -48,7 +48,7 @@ Perl       **.pl**
 Python     **.py**  
 Shell      **.sh**  
 SQL        **.sql**  
-Swift      **.swfit**  
+Swift      **.swift**  
 Text **.txt**  
 XML **.xml**  
 
