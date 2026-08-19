@@ -38,7 +38,7 @@ Arduino    **.ino**
 Awk        **.awk**  
 C/C++      **.c|.cpp|.h**  
 CSharp     **.cs**  
-Fortran    **.f90|.f95|.f03**  
+Fortran    **.f90|.f95|.f03|.f|.ff|.for**  
 Haskell    **.hs**  
 HTML       **.html**  
 Javascript **.js**  
@@ -46,6 +46,8 @@ JSON       **.json**
 Pascal     **.pas**  
 Perl       **.pl**  
 Python     **.py**  
+Ruby       **.rb**  
+Rust       **.rs**  
 Shell      **.sh**  
 SQL        **.sql**  
 Swift      **.swift**  
