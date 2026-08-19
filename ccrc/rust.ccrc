@@ -1,0 +1,117 @@
+# .rs
+
+# Comments
+color green "//.*$"
+color green start="/\*" end="\*/"
+
+# Documentation Comments
+color brightgreen "///.*$"
+color brightgreen "//!.*$"
+
+# Operators
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}\|\*\%\/\^~]+"
+color brightyellow "[!]"
+
+# Keywords
+color brightblue "\<(as|break|const|continue|crate|else|enum|extern|false|fn|for|if|impl|in|let|loop|match|mod|move|mut|pub|ref|return|self|Self|static|struct|super|trait|true|type|unsafe|use|where|while)\>"
+
+# Async / Modern Rust Keywords
+color brightblue "\<(async|await|dyn)\>"
+
+# Reserved Keywords
+color brightblue "\<(abstract|become|box|do|final|macro|override|priv|typeof|unsized|virtual|yield|try|gen)\>"
+
+# Primitive Types
+color brightblue "\<(bool|char|str)\>"
+color brightblue "\<(i8|i16|i32|i64|i128|isize)\>"
+color brightblue "\<(u8|u16|u32|u64|u128|usize)\>"
+color brightblue "\<(f32|f64)\>"
+
+# Common Standard Types
+color brightgreen "\<(String|Vec|Box|Option|Result|Some|None|Ok|Err)\>"
+color brightgreen "\<(Rc|Arc|Cell|RefCell|Mutex|RwLock|Cow)\>"
+color brightgreen "\<(HashMap|HashSet|BTreeMap|BTreeSet|VecDeque|LinkedList)\>"
+color brightgreen "\<(Path|PathBuf|OsString|CString|CStr)\>"
+
+# Standard Traits
+color brightgreen "\<(Clone|Copy|Debug|Default|Display|Drop|Eq|PartialEq|Ord|PartialOrd)\>"
+color brightgreen "\<(Iterator|IntoIterator|From|Into|TryFrom|TryInto|AsRef|AsMut)\>"
+color brightgreen "\<(Read|Write|Send|Sync|Sized|Unpin)\>"
+
+# Common Functions / Macros
+color cyan "\<(drop|size_of|align_of|replace|swap|take)\>"
+
+# Macros
+color cyan "\<(println|print|eprintln|eprint|format|vec|panic|assert|assert_eq|assert_ne)\>!"
+color cyan "\<(dbg|todo|unimplemented|unreachable|matches|include|include_str|include_bytes)\>!"
+color cyan "\<(env|option_env|concat|stringify|cfg)\>!"
+
+# Attributes
+color red "#\[[^\]]+\]"
+color red "#!\[[^\]]+\]"
+
+# Lifetimes
+color brightred "'[a-zA-Z_][a-zA-Z0-9_]*"
+
+# Variables / References
+color brightyellow "&[a-zA-Z_][a-zA-Z0-9_]*"
+
+# Numbers / Decimal Literal
+color brightmagenta "\<([0-9][0-9_]*)\>"
+
+# Integer Suffixes
+color brightmagenta "\<([0-9][0-9_]*(i8|i16|i32|i64|i128|isize|u8|u16|u32|u64|u128|usize))\>"
+
+# Floating Point
+color brightmagenta "\<([0-9][0-9_]*\.[0-9][0-9_]*)\>"
+color brightmagenta "\<([0-9][0-9_]*(\.[0-9][0-9_]*)?[eE][+-]?[0-9][0-9_]*)\>"
+
+# Float Suffixes
+color brightmagenta "\<([0-9][0-9_]*\.[0-9][0-9_]*(f32|f64))\>"
+
+# Binary Literal "0b"
+color brightmagenta "\<(0[bB][0-1_]+)\>"
+
+# Octal Literal "0o"
+color brightmagenta "\<(0[oO][0-7_]+)\>"
+
+# Hexadecimal Literal "0x"
+color brightmagenta "\<(0[xX][0-9A-Fa-f_]+)\>"
+
+# Characters
+color yellow "'([^'\\]|\\.)'"
+
+# Byte Characters
+color yellow "b'([^'\\]|\\.)'"
+
+# Text
+color yellow ""[^"]*""
+
+# Byte Strings
+color yellow "b"[^"]*""
+
+# Raw Strings
+color yellow "r#*"[^"]*"#*"
+
+# Raw Byte Strings
+color yellow "br#*"[^"]*"#*"
+
+# Paths / Namespace Separator
+color brightyellow "::"
+
+# Range Operators
+color brightyellow "\.\."
+color brightyellow "\.\.="
+
+# Arrow Operators
+color brightyellow "->"
+color brightyellow "=>"
+
+# Question Mark Operator
+color brightyellow "\?"
+
+# Dereference
+color brightyellow "\*"
+
+# References
+color brightyellow "&"

@@ -11,14 +11,14 @@ ccat - coloring stdin or file to stdout using ccrc coloring
 **...** | **ccat** [*OPTION*]
 
 # DESCRIPTION
-Coloring stdin or [*FILE*] using ~/.nano/(syntax).nanorc syntax file
+Coloring stdin or [*FILE*] using a ccrc syntax file
 
 # OPTIONS
 **----help**  
 : Shows the default help screen
 
 **----syntax=***(syntax)*  
-: Renders stdin or [*FILE*] to stdout coloring using ~/.nano/(syntax).nanorc file
+: Renders stdin or [*FILE*] to stdout and coloring using ccrc syntax files
 
 # EXAMPLES
 **ccat** f

@@ -1,0 +1,80 @@
+# .rb
+
+# Comments
+color green "#.*$"
+color green start="^=begin" end="^=end"
+
+# Operators
+color brightyellow "[;\&\=\(\)\[\]\+\-\?:\,\.\>\<\{\}\|\*\%\/\^~]+"
+color brightyellow "[!]"
+
+# Statements / Reserved Keywords
+color brightblue "\<(alias|and|begin|break|case|class|def|defined|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)\>"
+
+# Special Ruby Keywords / Constants
+color brightblue "\<(BEGIN|END)\>"
+color brightred "\<(__FILE__|__LINE__|__ENCODING__)\>"
+
+# Standard Constants / Types
+color brightblue "\<(true|false|nil)\>"
+color brightblue "\<(Array|Hash|String|Symbol|Integer|Float|Numeric|Complex|Rational|Range)\>"
+color brightblue "\<(Object|BasicObject|Class|Module|Struct|Regexp|MatchData|Time|File|Dir|IO)\>"
+color brightblue "\<(Exception|StandardError|RuntimeError|ArgumentError|TypeError|NameError|NoMethodError)\>"
+
+# Common Standard Classes
+color brightgreen "\<(Enumerable|Enumerator|Comparable|Kernel|Fiber|Thread|Process|GC)\>"
+
+# Keywords / Common Functions
+color cyan "\<(puts|print|printf|p|gets|exit|abort|sleep|system|exec|require|require_relative|load)\>"
+color cyan "\<(raise|fail|catch|throw|loop|lambda|proc|caller|binding)\>"
+
+# Object / Class Methods
+color brightmagenta "\<(initialize|new|include|extend|prepend|attr_reader|attr_writer|attr_accessor)\>"
+color brightmagenta "\<(private|protected|public|module_function)\>"
+
+# Instance Variables
+color red "(@+[a-zA-Z_][a-zA-Z0-9_]*)"
+
+# Class Variables
+color brightred "(@@+[a-zA-Z_][a-zA-Z0-9_]*)"
+
+# Global Variables
+color red "(\$+[a-zA-Z_][a-zA-Z0-9_]*)"
+
+# Symbols
+color brightgreen ":[a-zA-Z_][a-zA-Z0-9_]*"
+color brightgreen ":\\"[^\\"]*\\""
+color brightgreen ":'[^']*'"
+
+# Numbers / Decimal Literal
+color brightmagenta "\<([0-9]+)\>"
+
+# Floating Point
+color brightmagenta "\<([0-9]+\.[0-9]+)\>"
+color brightmagenta "\<([0-9]+(\.[0-9]+)?[eE][+-]?[0-9]+)\>"
+
+# Binary Literal "0b"
+color brightmagenta "\<(0[bB][0-1_]+)\>"
+
+# Octal Literal "0o"
+color brightmagenta "\<(0[oO][0-7_]+)\>"
+
+# Hexadecimal Literal "0x"
+color brightmagenta "\<(0[xX][0-9A-Fa-f_]+)\>"
+
+# Strings
+color yellow ""[^"]*""
+color yellow "'[^']*'"
+
+# String Interpolation
+color white start="#\{" end="\}"
+
+# Regular Expressions
+color brightgreen "/[^/\n]+/[a-zA-Z]*"
+
+# Blocks
+color brightyellow "\<\bdo\b\>"
+color brightyellow "\<\bend\b\>"
+
+# Common Literals
+color brightblue "\<(true|false|nil)\>"
