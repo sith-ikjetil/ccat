@@ -1,4 +1,4 @@
-% ccat(1) ccat 0.1
+% ccat(1) ccat 1.2
 % Written by Kjetil Kristoffer Solberg
 % December 2020
 
