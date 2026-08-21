@@ -1,7 +1,7 @@
 # .json files
-color yellow "\"[^"]*\"" 
-color yellow "\'[^']*\'"
+color brightgreen "\"[^"]*\"" 
+color brightgreen "\'[^']*\'"
 color brightyellow "[\{\}\,\:\[\]]+"
-color brightblue   "[-]?[1-9][0-9]*([Ee][+-]?[0-9]+)?" 
-color cyan  "null"
-color cyan "(true|false)"
+color brightblue   "[-]?[0-9][0-9]*([Ee][+-]?[0-9]+)?" 
+color brightblue  "null"
+color brightblue "(true|false)"
