@@ -905,6 +905,16 @@ begin
 end;
 
 //
+// Function: DoesFileExists
+//
+// (i): Checks if home config directory exists. Returns true/false.
+//
+function DoesCcrcFileExistsInUsrLocalShareDirectory(filename: string): boolean;
+begin
+    Result := FileExists('/usr/local/share/ccat/.ccat/' + filename);        
+end;
+
+//
 // LoadSyntaxNanoRc
 //
 // (i): Loads syntax information from 1) ~/.ccat/<syntax>.ccrc, then 
@@ -927,6 +937,10 @@ begin
     else if DoesCcrcFileExistsInUsrShareDirectory(fname) then
     begin
         fname := '/usr/share/ccat/.ccat/' + fname;    
+    end
+    else if DoesCcrcFileExistsInUsrLocalShareDirectory(fname) then
+    begin
+        fname := '/usr/local/share/ccat/.ccat/' + fname;    
     end
     else exit;
     
