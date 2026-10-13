@@ -907,11 +907,24 @@ end;
 //
 // Function: DoesFileExists
 //
-// (i): Checks if home config directory exists. Returns true/false.
+// (i): macOS: Checks if home config directory exists. Returns true/false.
 //
 function DoesCcrcFileExistsInUsrLocalShareDirectory(filename: string): boolean;
 begin
     Result := FileExists('/usr/local/share/ccat/.ccat/' + filename);        
+end;
+
+//
+// Function: DoesFileExists
+//
+// (i): Windows: Checks if home config directory exists. Returns true/false.
+//
+function DoesCcrcFileExistsInProgramDataDirectory(filename: string): boolean;
+var
+ dpath: string;
+begin
+    dpath := GetEnvironmentVariable('ProgramData') + '\ccat\.ccat';
+    Result := FileExists(dpath + '\' + filename);        
 end;
 
 //
@@ -941,6 +954,10 @@ begin
     else if DoesCcrcFileExistsInUsrLocalShareDirectory(fname) then
     begin
         fname := '/usr/local/share/ccat/.ccat/' + fname;    
+    end
+    else if DoesCcrcFileExistsInProgramDataDirectory(fname) then
+    begin
+        fname := GetEnvironmentVariable('ProgramData') + '\ccat\.ccat\' + fname;
     end
     else exit;
     
