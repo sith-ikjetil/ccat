@@ -1,0 +1,40 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+	  <ComponentGroup Id="CCatComponents" Directory="INSTALLFOLDER64">
+		  <Component Guid="{D4BD03A4-AFCA-4087-8EA6-B872EDE1B2E0}">
+			  <File Id="CCatExe" Source="../../../src/ccat.exe" KeyPath="yes"/>
+			  <Environment
+					Id="CCatPathEnvironment"
+					Name="PATH"
+					Value="[INSTALLFOLDER64]"
+					Action="set"
+					Part="last"
+					System="yes" />
+			  <RemoveFolder Directory="CCatData2Folder" On="uninstall"/>
+		  </Component>
+	  </ComponentGroup>
+	  <ComponentGroup Id="CCatCcrcComponents" Directory="CCatData2Folder">
+		  <File Source="../../../ccrc/arduino.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/asm.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/awk.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/c.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/csharp.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/css.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/fortran.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/haskell.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/html.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/js.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/json.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/pascal.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/perl.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/python.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/ruby.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/rust.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/sh.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/sql.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/swift.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/text.ccrc" KeyPath="yes"/>
+		  <File Source="../../../ccrc/xml.ccrc" KeyPath="yes"/>
+	  </ComponentGroup>
+  </Fragment>
+</Wix>

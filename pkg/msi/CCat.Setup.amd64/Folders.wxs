@@ -1,0 +1,13 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER64" Name="!(bind.Property.ProductName)" />
+    </StandardDirectory>
+	  <StandardDirectory Id="CommonAppDataFolder">
+		  <Directory Id="CCatDataFolder" Name="ccat">
+			  <Directory Id="CCatData2Folder" Name=".ccat" >
+			  </Directory>
+		  </Directory>
+	  </StandardDirectory>
+  </Fragment>
+</Wix>

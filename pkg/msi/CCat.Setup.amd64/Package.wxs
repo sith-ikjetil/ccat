@@ -1,0 +1,10 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Id="SOLBERG.IT.SOFTWARE.CCat.Setup.amd64" Name="ccat" Manufacturer="SOLBERG IT SOFTWARE" Version="1.2.1" UpgradeCode="{46E12548-FD3E-493C-A7BB-047FB51DD782}">
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+	<MediaTemplate EmbedCab="yes" />
+    <Feature Id="Main">
+        <ComponentGroupRef Id="CCatComponents" />
+	    <ComponentGroupRef Id="CCatCcrcComponents"/>
+    </Feature>
+  </Package>
+</Wix>
