@@ -69,8 +69,13 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+<<<<<<< HEAD
 *.exe
 *.o
+=======
+*.o
+*.DS_Store
+>>>>>>> 2acf9ec (Improved c.ccrc and gitignore.)
 
 # Chutzpah Test files
 _Chutzpah*
