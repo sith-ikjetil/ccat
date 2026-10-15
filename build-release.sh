@@ -7,7 +7,7 @@
 echo "Compiling ccat ..."
 echo "> using release build <"
 
-fpc ./ccat.pas
+fpc -FE./build -FU./build ./src/ccat.pas 
 if [[ $? -eq 0 ]]
 then
     echo "> ccat build ok <"

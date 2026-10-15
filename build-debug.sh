@@ -7,7 +7,7 @@
 echo "Compiling ccat ..."
 echo "> using debug build <"
 
-fpc ./ccat.pas -g
+fpc -FE./build -FU./build ./src/ccat.pas -g -gl
 if [[ $? -eq 0 ]]
 then
     echo "> ccat build ok <"
