@@ -2,13 +2,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug ccat",
+            "name": "Debug ccat (Windows)",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/ccat.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
+            "terminal": "integrated"
+        },
+        {
+            "name": "Debug ccat (Linux)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ccat",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
+            "terminal": "integrated"
+        },
+        {
+            "name": "Debug ccat (macOS)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ccat",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
             "terminal": "integrated"
         }
     ]
