@@ -4,15 +4,30 @@
 #: Author      : Kjetil Kristoffer Solberg <post@ikjetil.no>
 #: Version     : 1.0
 #: Description : Builds ccat.
-echo "Compiling ccat ..."
-echo "> using release build <"
+# ----------------------------------------
+# Helpers
+# ----------------------------------------
+step() {
+    echo
+    echo "========================================"
+    echo "$1"
+    echo "========================================"
+}
 
-fpc -FE./build -FU./build ./src/ccat.pas 
+fail() {
+    echo "ERROR: $1" >&2
+    exit 1
+}
+
+# ----------------------------------------
+# 1. Build
+# ----------------------------------------
+step "1. Building ccat in release mode"
+
+fpc -FE./build -FU./build ./src/ccat.pas
 if [[ $? -eq 0 ]]
 then
-    echo "> ccat build ok <"
+    echo "======= Build process complete ======="
 else
-    echo "> ccat build error <"
+    fail "******** Build process error *********"
 fi
-
-echo "> build process complete <"
