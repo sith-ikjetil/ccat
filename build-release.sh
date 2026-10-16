@@ -24,7 +24,7 @@ fail() {
 # ----------------------------------------
 step "1. Building ccat in release mode"
 
-fpc -FE./build -FU./build ./src/ccat.pas
+fpc -FE./build -FU./build ./src/ccat.pas "$@"
 if [[ $? -eq 0 ]]
 then
     echo "======= Build process complete ======="

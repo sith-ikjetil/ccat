@@ -24,7 +24,7 @@ fail() {
 # ----------------------------------------
 step "1. Building ccat in debug mode"
 
-fpc -FE./build -FU./build ./src/ccat.pas -gw3 -gl -O-
+fpc -FE./build -FU./build ./src/ccat.pas -gw3 -gl -O- "$@"
 if [[ $? -eq 0 ]]
 then
     echo "======= Build process complete ======="
