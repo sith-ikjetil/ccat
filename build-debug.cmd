@@ -3,7 +3,7 @@
 echo Compiling ccat ...
 echo ^> using debug build ^<
 
-fpc -Px86_64 -Twin64 -g -gl -FE.\build -FU.\build .\src\ccat.pas 
+fpc -Px86_64 -Twin64 -g -gl -O- -gw3 -FE.\build -FU.\build .\src\ccat.pas 
 if %ERRORLEVEL% equ 0 (
     echo ^> ccat build ok ^<
 ) else (
