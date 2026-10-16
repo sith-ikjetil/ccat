@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug ccat",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ccat.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": true,
+            "terminal": "integrated"
+        }
+    ]
+}
